@@ -39,7 +39,6 @@ export class Logger {
      */
     getCurrentDateTimeFormatted(){
         let now = new Date(Date.now())
-        console.log(now.toISOString())
         
         return {
             date: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
