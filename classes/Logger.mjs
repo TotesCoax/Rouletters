@@ -21,19 +21,11 @@ export class Logger {
     constructor(filePath = "./", context = "unassigned"){
         let now = new Date(Date.now())
         /** @type {string} */
-        this.filePath = `${filePath}/${this.getCurrentDateTimeFormatted().date}.txt`
+        this.filePath = `${filePath}\\${this.getCurrentDateTimeFormatted().date}.txt`
         /** @type {string} */
         this.context = context
-        this.updateLog()
+        this.log(`\nNew Logger for ${context} saving to ${this.filePath}`, {tags:["NewSession","setup"]})
     }
-
-    /**
-     * This method is run in the constructor to add a line to show when a new session has started.
-     */
-    async updateLog(){
-        this.log("New Logging Session Started", {tags: ["NewSession"]})
-    }
-
     /**
      * Method to get date and time based on current time. Use returned object properties to get uniform formatting.     * 
      */
@@ -104,7 +96,7 @@ export class Logger {
                 line = line.concat(" #", tag)
             }
         }
-        return line
+        return line.concat("\n")
     }
 
     async _write(msg){
