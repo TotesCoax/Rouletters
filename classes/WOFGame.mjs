@@ -10,6 +10,7 @@ import { PlayerHandler } from './PlayerHandler.mjs'
 import { Letter } from './Letter.mjs'
 import { Player } from './Player.mjs'
 import { BoardQueue } from './BoardQueue.mjs'
+import { Logger } from './Logger.mjs'
 
 export class WOFGame{
     /**
@@ -19,7 +20,7 @@ export class WOFGame{
      * @param {Array} sections Sections of the wheel array, mix of numbers and strings
      * @param {Player[]} players Array of players
      */
-    constructor(clue, phrase, sections, players){
+    constructor(logFileDirectory, clue, phrase, sections, players){
         /** @type {Board} */
         this.Board = new Board(clue, phrase)
         /** @type {Wheel} */
@@ -33,6 +34,7 @@ export class WOFGame{
         /** @type {BoardQueue} */
        this.PuzzleQueue = new BoardQueue()
        this.Board.revealAllLetters()
+       this.GameLogger = new Logger(logFileDirectory, "WOFGame")
     }
 
     // Setup Functions
@@ -42,6 +44,7 @@ export class WOFGame{
      * @param {string} phrase 
      */
     startNewRound(clue, phrase){
+        this.GameLogger.info("Starting new round", {tags: ["wof", "gameAction","puzzle"]})
         this.createNewBoard(clue, phrase)
         this.PlayerHandler.resetScoresToZero()
         this.PlayerHandler.setActivePlayer()
@@ -49,18 +52,20 @@ export class WOFGame{
         this.Wheel.shuffleSections()
     }
     createNewBoard(clue, phrase){
+        this.GameLogger.log("Creating new board", {tags:["wof", "board", "setup"]})
         this.Board = new Board(clue, phrase)
     }
     shuffleWheel(){
+        this.GameLogger.log("Shuffling wheel sections", {tags:["wof","wheel", "setup"]})
         this.Wheel.shuffleSections()
     }
     enqueuePuzzles(arrayOfCluesAndPuzzles){
+        this.GameLogger.log(`Adding puzzles to game queue:\n${this.PuzzleQueue}`, {tags:["wof","puzzle","setup"]})
         this.PuzzleQueue.populateQueue(arrayOfCluesAndPuzzles)
-        console.log(this.PuzzleQueue)
-        console.log(Object.getPrototypeOf(this.PuzzleQueue))
     }
     nextPuzzle(){
         let nextPuzz = this.PuzzleQueue.dequeue()
+        this.GameLogger.log(`Next Puzzle requested, upcoming: ${nextPuzz.clue}, ${nextPuzz.puzzle}`, {tags:["wof","gameAction","setup"]})
         this.startNewRound(nextPuzz.clue, nextPuzz.puzzle)
     }
 
@@ -71,6 +76,7 @@ export class WOFGame{
      * @returns {Letter}
      */
     parseGuess(char){
+        this.GameLogger.log(`Processing guess input as letter: ${char}`,{tags:["wof","gameAction","player","gameProcess"]})
         return new Letter(char)
     }
 
@@ -84,6 +90,7 @@ export class WOFGame{
      * @returns {Player} returns Player object of current turn's player
      */
     playerGuess(guess, playerID){
+        this.GameLogger.log(`${playerID} submitted guess of ${guess}`, {tags:["wof","player","gameAction"]})
         let result = this.handleGuess(guess, playerID)
         if(!result){
             this.PlayerHandler.advanceTurn()
@@ -98,6 +105,7 @@ export class WOFGame{
      * @returns {boolean} true if successful, false if not
      */
     handleGuess(guess, playerID){
+        this.GameLogger.info(`Processing guess ${guess} from ${this.PlayerHandler.getPlayer(playerID).name}`,{tags:["wof","gameAction","process"]})
         let letter = new Letter(guess),
             player = this.PlayerHandler.getPlayer(playerID)
 
@@ -119,7 +127,7 @@ export class WOFGame{
     }
 
     handleSpecialSpace(value){
-        console.log(`Special space: ${value}`)
+        this.GameLogger.info(`Special space triggered: ${value}`,{tags:["wof","gameAction","process"]})
         switch (value) {
             case 'bankrupt':
                 this.PlayerHandler.getCurrentPlayer().setScore(0)
@@ -140,6 +148,7 @@ export class WOFGame{
      * @param {Player} player 
      */
     handleConsonant(letter, player){
+        this.GameLogger.info(`Consonant processing: ${letter.character}`,{tags:["wof","gameAction","process"]})
         let wheelValue = this.Wheel.getWheelValue(),
             guessResult = this.Board.handleGuess(letter.character)
 
@@ -157,6 +166,7 @@ export class WOFGame{
      * @param {Player} player 
      */
     handleVowel(letter, player){
+        this.GameLogger.info(`Vowel processing: ${letter.character}`,{tags:["wof","gameAction","process"]})
         if (player.score <= 250){
             return false
         }
@@ -166,9 +176,7 @@ export class WOFGame{
         if (guessResult < 0){
             return false
         }
-        console.log(player.score)
         player.updateScore(-250)
-        console.table(this.PlayerHandler.players)
         return true
     }
 
@@ -177,6 +185,7 @@ export class WOFGame{
      * @returns {{Board: Board, Wheel: Wheel, PlayerHandler: PlayerHandler}}
      */
     getGamestate(){
+        this.GameLogger.log(`Gamestate request rec'd, sending.`,{tags:["wof",""]})
         this.PlayerHandler.setActivePlayer()
         return {
             Board: this.Board,
@@ -193,16 +202,17 @@ export class WOFGame{
         let startingDeg = this.Wheel.getCurrentDeg(),
             spinPower = this.Wheel.spinWheel(speedValue),
             endingDeg = this.Wheel.getCurrentDeg(),
-            wheelIndex = this.Wheel.getWheelIndex()
+            wheelIndex = this.Wheel.getWheelIndex(),
+            initialValue = this.Wheel.getWheelValue()
         
-        console.log(`Current Value: ${this.Wheel.getWheelValue()}`)
         this.handleSpecialSpace(this.Wheel.getWheelValue())
         let spinData = {start: startingDeg, power: spinPower, end: endingDeg, index: wheelIndex}
-        console.table(spinData)
+        this.GameLogger.info(`Wheel spun from ${initialValue} to ${this.Wheel.getWheelValue()}`,{tags:["wof","wheel","gameAction"]})
         return spinData
     }
 
     solvedPuzzle(){
+        this.GameLogger.info(`Puzzle solve processing`,{tags:["wof","gameAction","puzzle","process"]})
         this.Board.revealAllLetters()
         this.PlayerHandler.getCurrentPlayer().saveRoundScoretoTotalScore()
     }
@@ -210,13 +220,14 @@ export class WOFGame{
     //Server Related
 
     handlePlayerDisconnect(socketID){
+        this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID).name} disconnected`,{tags:["wof","player"]})
         if(this.PlayerHandler.getPlayer(socketID)){
             this.PlayerHandler.getPlayer(socketID).setConnectedStatus(false)
-            console.table(this.PlayerHandler.players)
         }
     }
 
     getSocketIDForActivePlayer(){
+        this.GameLogger.log(`SocketID requested for ${this.PlayerHandler.getCurrentPlayer().name}`)
         return this.PlayerHandler.getCurrentPlayer().socketID
     }
     /**
@@ -224,6 +235,7 @@ export class WOFGame{
      * @param {boolean} value 
      */
     setWaitingForGuess(value){
+        this.GameLogger.log(`Setting waiting for guess status.`)
         this.isWaitingForGuess = value
     }
     /**
@@ -231,6 +243,7 @@ export class WOFGame{
      * @param {boolean} value 
      */
     setWaitingForSpin(value){
+        this.GameLogger.log(`Setting waiting for guess status.`)
         this.isWaitingForSpin = value
     }
 
