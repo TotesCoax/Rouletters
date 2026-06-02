@@ -220,7 +220,7 @@ export class WOFGame{
     //Server Related
 
     handlePlayerDisconnect(socketID){
-        this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID).name} disconnected`,{tags:["wof","player"]})
+        this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID)} disconnected`,{tags:["wof","player"]})
         if(this.PlayerHandler.getPlayer(socketID)){
             this.PlayerHandler.getPlayer(socketID).setConnectedStatus(false)
         }
