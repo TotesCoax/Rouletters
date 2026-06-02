@@ -104,7 +104,7 @@ export class Logger {
                 line = line.concat(" #", tag)
             }
         }
-        return line.concat("\n")
+        return line
     }
 
     async _write(msg){
