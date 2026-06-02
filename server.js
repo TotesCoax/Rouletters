@@ -17,7 +17,7 @@ import { Logger } from './classes/Logger.mjs'
 
 async function main(){
 
-    const LogDirectory = `./logs/`
+    const LogDirectory = path.resolve("./logs/")
     const ServerLogger = new Logger(LogDirectory, "Server")
     
     const GameServer = new LocallyConnectedServer('client')
@@ -202,7 +202,7 @@ async function main(){
     })
     
     ServerLogger.log(`Starting instance of game`, {tags:["gameAction"]})
-    const WOF = new WOFGame()
+    const WOF = new WOFGame(LogDirectory)
 }
 
 main()
