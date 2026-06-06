@@ -135,7 +135,7 @@ async function main(){
             }
             // Add them to the players channel
             socket.join('players')
-            ServerLogger.log(`Player joined room \n${WOF.PlayerHandler.players}`)
+            ServerLogger.log(`Player joined players room`)
         })
         // A player sends spin data to the server
         socket.on(EventCode.speedData, (data) => {
