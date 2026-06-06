@@ -24,7 +24,7 @@ export class Logger {
         this.filePath = `${filePath}\\${this.getCurrentDateTimeFormatted().date}.txt`
         /** @type {string} */
         this.context = context
-        this.log(`\nNew Logger for ${context} saving to ${this.filePath}`, {tags:["NewSession","setup"]})
+        this.log(`New Logger for ${context} saving to ${this.filePath}`, {tags:["NewSession","setup"]})
     }
     /**
      * Method to get date and time based on current time. Use returned object properties to get uniform formatting.     * 
