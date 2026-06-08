@@ -1,9 +1,9 @@
 import { Logger } from "./Logger.mjs"
 
 export class Wheel{
-    constructor(logFilePath = "./", sections = []){
+    constructor(logFilePath = "./", options = {sections:[]}){
         this.WheelLogger = new Logger(logFilePath, "Wheel")
-        this.sections = sections
+        this.sections = options.sections
         this.sectionWidthInDeg = 0
         this.currentDeg = 0
         this.minValue = 3
@@ -67,7 +67,7 @@ export class Wheel{
         return Math.round((speedFromPhone * this.speedPowerFactor) + (this.calcRandomNudge(speedFromPhone))) 
     }
     resetCurrentDeg(){
-        this.WheelLogger.log(`Current reading: ${this.currentDeg}`)
+        this.WheelLogger.log(`Reset Current degree check, current reading: ${this.currentDeg}`)
         while (this.currentDeg > 360){
             this.WheelLogger.log(`Lowering from ${this.currentDeg} to ${this.currentDeg - 360}`)
             this.currentDeg -= 360
@@ -99,7 +99,7 @@ export class Wheel{
      */
     getWheelValue(){
         let reading = this.sections[this.getWheelIndex()]
-        console.log("reading:", reading, Math.floor(this.currentDeg/this.sectionWidthInDeg))
+        this.WheelLogger.log(`reading: ${reading} ${Math.floor(this.currentDeg/this.sectionWidthInDeg)}`)
         return reading
     }
     getCurrentDeg(){
