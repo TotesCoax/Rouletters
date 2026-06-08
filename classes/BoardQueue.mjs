@@ -1,3 +1,4 @@
+import { Logger } from "./Logger.mjs"
 import { BasicQueue } from "./BasicQueue.mjs"
 import { BoardPuzzle } from "./BoardPuzzle.mjs"
 
@@ -7,8 +8,9 @@ import { BoardPuzzle } from "./BoardPuzzle.mjs"
  * @extends BasicQueue
  */
 export class BoardQueue extends BasicQueue {
-    constructor(){
+    constructor(logfilePath = "./"){
         super()
+        this.QueueLogger = new Logger(logfilePath, "Board Queue")
     }
     /**
      * Generates an array to use as a new queue for a game session. Removes the headers from the file too.
@@ -22,6 +24,7 @@ export class BoardQueue extends BasicQueue {
         }
         //Remove the header row
         newQueue.shift()
+        this.QueueLogger.info(`New array of puzzles has been parsed.`)
         return newQueue
     }
     /**
@@ -36,11 +39,13 @@ export class BoardQueue extends BasicQueue {
         // } else {
         //     this.items.push(this.parsePuzzleArrayWithHeaders(array))
         // }
+        this.QueueLogger.info(`New puzzles have been added to the queue.`)
     }
     /**
      * @returns {BoardPuzzle}
      */
     dequeue(){
+        this.QueueLogger.info(`Puzzles has been removed from the queue.`)
         return super.dequeue()
     }
 }
