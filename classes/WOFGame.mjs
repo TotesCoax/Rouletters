@@ -15,26 +15,27 @@ import { Logger } from './Logger.mjs'
 export class WOFGame{
     /**
      * If no values are provided it makes a default game. Otherwise you can supply values to create a game from a previous game state.
-     * @param {string} clue Clue for the puzzle
-     * @param {string} phrase Phrase for the puzzle
-     * @param {Array} sections Sections of the wheel array, mix of numbers and strings
-     * @param {Player[]} players Array of players
+     * @param {Object} options optional params to pass in
+     * @param {string} options.clue Clue for the puzzle
+     * @param {string} options.phrase Phrase for the puzzle
+     * @param {Array} options.sections Sections of the wheel array, mix of numbers and strings
+     * @param {Player[]} options.players Array of players
      */
-    constructor(logFileDirectory, clue, phrase, sections, players){
+    constructor(logFileDirectory, options){
         /** @type {Logger} */
         this.GameLogger = new Logger(logFileDirectory, "WOFGame")
         /** @type {Board} */
-        this.Board = new Board(this.GameLogger.filePath,clue, phrase)
+        this.Board = new Board(logFileDirectory, options)
         /** @type {Wheel} */
-        this.Wheel = new Wheel(this.GameLogger.filePath, sections)
+        this.Wheel = new Wheel(logFileDirectory, options)
         /** @type {PlayerHandler} */
-        this.PlayerHandler = new PlayerHandler(this.GameLogger.filePath, players)
+        this.PlayerHandler = new PlayerHandler(logFileDirectory, options)
         /** @type {boolean} */
         this.isWaitingForSpin = false
         /** @type {boolean} */
         this.isWaitingForGuess = false
         /** @type {BoardQueue} */
-       this.PuzzleQueue = new BoardQueue(this.GameLogger.filePath)
+       this.PuzzleQueue = new BoardQueue(logFileDirectory)
        this.Board.revealAllLetters()
     }
 
@@ -46,15 +47,20 @@ export class WOFGame{
      */
     startNewRound(clue, phrase){
         this.GameLogger.info("Starting new round", {tags: ["wof", "gameAction","puzzle"]})
-        this.createNewBoard(clue, phrase)
+        this.createNewBoard(clue,phrase)
         this.PlayerHandler.resetScoresToZero()
         this.PlayerHandler.setActivePlayer()
         // For now, let's not scale up point values
         this.Wheel.shuffleSections()
     }
+    /**
+     * 
+     * @param {string} clue 
+     * @param {string} phrase 
+     */
     createNewBoard(clue, phrase){
         this.GameLogger.log("Creating new board", {tags:["wof", "board", "setup"]})
-        this.Board = new Board(clue, phrase)
+        this.Board = new Board(this.GameLogger.fileDirectory, {clue:clue,phrase:phrase})
     }
     shuffleWheel(){
         this.GameLogger.log("Shuffling wheel sections", {tags:["wof","wheel", "setup"]})
@@ -117,18 +123,18 @@ export class WOFGame{
 
 
         if (letter.isVowel){
-            console.log('Vowel found')
+            this.GameLogger.log('Vowel found')
             return this.handleVowel(letter, player)
         }
-        if (letter.isLetter){
-            console.log('Consonant found')
+        if (letter.isLetter||letter.isNumber){
+            this.GameLogger.log('Consonant found')
             return this.handleConsonant(letter, player)
         }
         return false
     }
 
     handleSpecialSpace(value){
-        this.GameLogger.info(`Special space triggered: ${value}`,{tags:["wof","gameAction","process"]})
+        this.GameLogger.info(`Checking if special space: ${value}`,{tags:["wof","gameAction","process"]})
         switch (value) {
             case 'bankrupt':
                 this.PlayerHandler.getCurrentPlayer().setScore(0)
@@ -157,7 +163,6 @@ export class WOFGame{
             return false
         }        
         player.updateScore(wheelValue * guessResult)
-        console.table(this.PlayerHandler.players)
         return true
     }
 
