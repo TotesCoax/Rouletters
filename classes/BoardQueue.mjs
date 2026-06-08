@@ -4,7 +4,6 @@ import { BoardPuzzle } from "./BoardPuzzle.mjs"
 
 /**
  * A queue for Board Puzzles for a game session.
- * @class
  * @extends BasicQueue
  */
 export class BoardQueue extends BasicQueue {
