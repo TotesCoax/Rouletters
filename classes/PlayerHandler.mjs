@@ -1,10 +1,12 @@
+import { Logger } from "./Logger.mjs"
 import { Player } from "./Player.mjs"
 
 export class PlayerHandler{
     /**
      * @param {Player[]} players - an array of Player objects
      */
-    constructor(players = []){
+    constructor(logFilePath ="./", players = []){
+        this.TurnLogger = new Logger(logFilePath, "PlayerHandler")
         this.players = players
         this.turnIndicator = 0
     }
@@ -15,6 +17,7 @@ export class PlayerHandler{
             this.players[i] = this.players[j]
             this.players[j] = temp
         }
+        this.TurnLogger.info(`Players have been shuffled`)
     }
     advanceTurn(){
         if(this.turnIndicator + 1 >= this.players.length){
@@ -23,6 +26,7 @@ export class PlayerHandler{
         }
         this.turnIndicator++
         this.setActivePlayer()
+        this.TurnLogger.info(`Turn has been advanced.`)
     }
     retreatTurn(){
         if(this.turnIndicator - 1 <= this.players.length){
@@ -31,6 +35,7 @@ export class PlayerHandler{
         }
         this.turnIndicator--
         this.setActivePlayer()
+        this.TurnLogger.info(`Turn has been retreated`)
     }
     getCurrentPlayer(){
         return this.players[this.turnIndicator]
@@ -61,6 +66,8 @@ export class PlayerHandler{
         }
         let newPlayer = new Player(gameID, socketID, playerName)
         this.players.push(newPlayer)
+        this.TurnLogger.info(`Added player to game: ${newPlayer.name}`)
+        this.TurnLogger.log(`Player Socket ID: ${newPlayer.socketID}`)
         return newPlayer.id
     }
     removePlayer(id){
@@ -68,14 +75,17 @@ export class PlayerHandler{
             console.log("No player found.")
             return []
         }
-        let removedPlayer = this.players.splice(this.getPlayerIndex(id), 1)
+        let removedPlayer = this.players.splice(this.getPlayerIndex(id), 1)[0]
+        this.TurnLogger.info(`Removed player from game: ${removedPlayer.name}`)
+        this.TurnLogger.log(`Socket ID: ${removedPlayer.socketID}`)
         return removedPlayer
     }
     isPlayerExists(id){
-        console.log('Checking if player exists.', this.getPlayerIndex(id))
+        this.TurnLogger.log('Checking if player exists.', this.getPlayerIndex(id))
         return this.getPlayerIndex(id) >= 0
     }
     isActivePlayer(id){
+        this.TurnLogger.log(`Checking if active player.`)
         return this.getPlayer(id).isActive
     }
     getPlayerIndex(playerId){
@@ -120,11 +130,13 @@ export class PlayerHandler{
     }
     resetScoresToZero(){
         this.players.forEach(player => player.setScore(0))
+        this.TurnLogger.log(`Scores have been set to zero.`)
     }
     setActivePlayer(){
         if (this.players.length > 0){
             this.players.forEach(player => player.isActive = false)
             this.players[this.turnIndicator].isActive = true
         }
+        this.TurnLogger.info(`${this.players[this.turnIndicator].name} is now the active player.`)
     }
 }
