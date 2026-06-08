@@ -5,9 +5,9 @@ export class PlayerHandler{
     /**
      * @param {Player[]} players - an array of Player objects
      */
-    constructor(logFilePath ="./", players = []){
+    constructor(logFilePath ="./", options = {players:[]}){
         this.TurnLogger = new Logger(logFilePath, "PlayerHandler")
-        this.players = players
+        this.players = options.players
         this.turnIndicator = 0
     }
     shufflePlayers(){
@@ -136,7 +136,7 @@ export class PlayerHandler{
         if (this.players.length > 0){
             this.players.forEach(player => player.isActive = false)
             this.players[this.turnIndicator].isActive = true
+            this.TurnLogger.info(`${this.players[this.turnIndicator].name} is now the active player.`)
         }
-        this.TurnLogger.info(`${this.players[this.turnIndicator].name} is now the active player.`)
     }
 }
