@@ -26,9 +26,9 @@ export class WOFGame{
         /** @type {Board} */
         this.Board = new Board(this.GameLogger.filePath,clue, phrase)
         /** @type {Wheel} */
-        this.Wheel = new Wheel(sections)
+        this.Wheel = new Wheel(this.GameLogger.filePath, sections)
         /** @type {PlayerHandler} */
-        this.PlayerHandler = new PlayerHandler(players)
+        this.PlayerHandler = new PlayerHandler(this.GameLogger.filePath, players)
         /** @type {boolean} */
         this.isWaitingForSpin = false
         /** @type {boolean} */
