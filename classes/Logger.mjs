@@ -49,10 +49,10 @@ export class Logger {
      * @param {LoggingOptions} options optional flags for logging
      */
     async log(msg, options){
+        let line = `** LOG ** ${await this._generateLine(msg, options)}`
+        this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.DEBUG){
-            let line = `** LOG ** ${await this._generateLine(msg, options)}`
             console.log(line)
-            this._write(line)
         }
     }
     /**
@@ -61,10 +61,10 @@ export class Logger {
      * @param {LoggingOptions} options.tags tags to help aggregate or search
      */
     async info(msg, options){
+        let line = `** INFO ** ${await this._generateLine(msg, options)}`
+        this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.INFO){
-            let line = `** INFO ** ${await this._generateLine(msg, options)}`
             console.info(line)
-            this._write(line)
         }
     }
     /**
@@ -73,10 +73,10 @@ export class Logger {
      * @param {LoggingOptions} options.tags tags to help aggregate or search
      */
     async warn(msg, options){
+        let line = `** WARN ** ${await this._generateLine(msg, options)}`
+        this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.WARN){
-            let line = `** WARN ** ${await this._generateLine(msg, options)}`
             console.warn(line)
-            this._write(line)
         }
     }
     /**
@@ -85,15 +85,15 @@ export class Logger {
      * @param {LoggingOptions} options.tags tags to help aggregate or search
      */
     async error(msg, options){
+        let line = `** ERROR ** ${await this._generateLine(msg, options)}`
+        this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.ERROR){
-            let line = `** ERROR ** ${await this._generateLine(msg, options)}`
             console.error(line)
-            this._write(line)
         }
     }
 
     /**
-     * A function to
+     * A function to generate a standardized message for the logger.
      * @param {string} msg 
      * @param {LoggingOptions} options 
      * @returns {string}
