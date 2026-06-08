@@ -21,8 +21,10 @@ export class WOFGame{
      * @param {Player[]} players Array of players
      */
     constructor(logFileDirectory, clue, phrase, sections, players){
+        /** @type {Logger} */
+        this.GameLogger = new Logger(logFileDirectory, "WOFGame")
         /** @type {Board} */
-        this.Board = new Board(clue, phrase)
+        this.Board = new Board(this.GameLogger.filePath,clue, phrase)
         /** @type {Wheel} */
         this.Wheel = new Wheel(sections)
         /** @type {PlayerHandler} */
@@ -34,7 +36,6 @@ export class WOFGame{
         /** @type {BoardQueue} */
        this.PuzzleQueue = new BoardQueue()
        this.Board.revealAllLetters()
-       this.GameLogger = new Logger(logFileDirectory, "WOFGame")
     }
 
     // Setup Functions
