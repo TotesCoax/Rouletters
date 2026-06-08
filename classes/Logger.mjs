@@ -22,6 +22,8 @@ export class Logger {
     constructor(filePath = "./", context = "unassigned"){
         let now = new Date(Date.now())
         /** @type {string} */
+        this.fileDirectory = filePath
+        /** @type {string} */
         this.filePath = `${filePath}\\${this.getCurrentDateTimeFormatted().date}.txt`
         /** @type {string} */
         this.context = context
