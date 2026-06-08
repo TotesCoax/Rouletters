@@ -1,12 +1,14 @@
 // const {Letter} = require('./Letter.mjs')
 import { Letter } from './Letter.mjs'
+import { Logger } from './Logger.mjs'
 
 export class Board{
     /**
      * @param {string} clue Clue to display to players
      * @param {string} phrase The Phrase the players need to solve
      */
-    constructor(clue = 'Have fun!', phrase = "Welcome to Rouletters!"){
+    constructor(logFilePath = "./", clue = 'Have fun!', phrase = "Welcome to Rouletters!"){
+        this.BoardLogger = new Logger(logFilePath, "Board")
         this.rowCount = 4
         this.colCount = 12
         this.maxChar = this.rowCount * this.colCount
@@ -23,7 +25,7 @@ export class Board{
      */
     tooManyChars(){
         if(this.phrase > this.maxChar){
-            console.log("This phrase is too large to fit the board.")
+            this.BoardLogger.warn(`This phrase is too large to fit the board.`)
         }
     }
     /**
@@ -32,6 +34,7 @@ export class Board{
      * @returns {string[]}
      */
     splitByWord(words){
+        this.BoardLogger.log(`Splitting phrase into array of words, space delimited.`)
         return words.trim().split(' ')
     }
     /**
@@ -39,6 +42,7 @@ export class Board{
      * @returns {Letter[][]}
      */
     generateBoard(){
+        this.BoardLogger.log(`Generating blank board spaces.`)
         let board = []
         for (let index = 0; index < this.rowCount; index++) {
             let col = []
@@ -55,6 +59,7 @@ export class Board{
      * @returns {string[]}
      */
     rackRows(){
+        this.BoardLogger.log(`Beginning racking of rows.`)
         let words = this.splitByWord(this.phrase),
             rack = '',
             rows = []
@@ -69,6 +74,7 @@ export class Board{
         }
         // Pushes last rack
         rows.push(rack)
+        this.BoardLogger.info(`Rows have been racke for puzzle.`)
         return rows
     }
     /**
@@ -77,6 +83,7 @@ export class Board{
      * @returns {number} 
      */
     findStartingSpot(row){
+        this.BoardLogger.log(`Calculating starting spot for letter placement.`)
         return Math.round((this.colCount - row.length)/2)
     }
     /**
@@ -85,6 +92,7 @@ export class Board{
      * @param {string[]} parsedRow Array of parsed/racked letters to apply to board.
      */
     assignLettersToRow(rowFromBoard, parsedRow){
+        this.BoardLogger.log(`Assigning letters to row.`)
         let index = this.findStartingSpot(parsedRow)
         for (let letter of parsedRow) {
             rowFromBoard[index] = new Letter(letter)
@@ -119,6 +127,7 @@ export class Board{
             default:
                 throw `Failed to populate`
         }
+        this.BoardLogger.info(`Board has been populated`)
     }
     /**
      * Handles guesses and also buying of vowels.
@@ -127,6 +136,7 @@ export class Board{
      * @returns {number} number of found letters or -1 if letter is already guessed.
      */
     handleGuess(letter){
+        this.BoardLogger.log(`Processing guess for: ${letter}`)
         let guessLetter = letter.toUpperCase()
         if(this.letterAlreadyGuessed(guessLetter)){
             console.log("Letter already guessed.")
@@ -142,7 +152,7 @@ export class Board{
                 }
             }
         }
-        console.log('Letters found:', numFoundLetters, this.guessedLetters)
+        this.BoardLogger.info(`Letters found: ${numFoundLetters} ${this.guessedLetters}'s`)
         return numFoundLetters
     }
     /**
@@ -151,6 +161,7 @@ export class Board{
      * @returns {boolean} Whether or not the letter is recorded in the guessed letters array.
      */
     letterAlreadyGuessed(guessLetter){
+        this.BoardLogger.log(`Checking if ${guessLetter} has already been guessed.`)
         return this.guessedLetters.findIndex(letter => letter === guessLetter) >= 0
     }
     revealAllLetters(){
@@ -161,6 +172,7 @@ export class Board{
                 }
             })
         })
+        this.BoardLogger.info(`Board has been revealed`)
     }
 }
 
