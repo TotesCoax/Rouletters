@@ -56,7 +56,7 @@ async function main(){
             if (WOF.PlayerHandler.players.length <= 0){
                 return
             }
-            ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(socket.id)}`)
+            ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(WOF.getSocketIDForActivePlayer)}`)
             let currentPlayer = WOF.getSocketIDForActivePlayer()
             socket.to(currentPlayer).emit('yourTurn', "You're up, dingus")
         }
@@ -77,7 +77,7 @@ async function main(){
         socket.on('gameFile', (data) => {
             ServerLogger.log(`File received from board. \n${data}\n`, {tags: ["file", "socketIO"]})
             WOF.PuzzleQueue.populateQueue(CSVParser.csvToArray(data))
-            WOF.createNewBoard('Puzzles Loaded', "Press next round to begin!")
+            WOF.createNewBoard("Puzzles Loaded", "Press next round to begin!")
             WOF.Board.revealAllLetters()
             changeNotificationToBoard()
             notificationToActivePlayer()
