@@ -202,6 +202,8 @@ async function main(){
     })
     
     ServerLogger.log(`Starting instance of game`, {tags:["gameAction"]})
+    Logger.setLoggingLevel('INFO')
+    Logger.getLoggingLevel()
     const WOF = new WOFGame(LogDirectory)
 }
 
