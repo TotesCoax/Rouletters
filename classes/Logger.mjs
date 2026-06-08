@@ -17,6 +17,7 @@ export class Logger {
      * 
      * @param {string} filePath path to the logger file directory you want to log to. If none is provided it will create a file in the same folder as the class as a fallback.
      * @param {string} context this will add a label in the logger to provide origin context to the line.
+     * @param {"DEBUG"|"INFO"|"WARN"|"ERROR"} desiredLogLevel indicate the minimum level of logging you want printed
      */
     constructor(filePath = "./", context = "unassigned"){
         let now = new Date(Date.now())
@@ -48,9 +49,11 @@ export class Logger {
      * @param {LoggingOptions} options optional flags for logging
      */
     async log(msg, options){
-        let line = `** LOG ** ${await this._generateLine(msg, options)}`
-        console.log(line)
-        this._write(line)
+        if (Logger.LoggingLevel <= Logger.LEVELS.DEBUG){
+            let line = `** LOG ** ${await this._generateLine(msg, options)}`
+            console.log(line)
+            this._write(line)
+        }
     }
     /**
      * @param {string} msg
@@ -58,9 +61,11 @@ export class Logger {
      * @param {LoggingOptions} options.tags tags to help aggregate or search
      */
     async info(msg, options){
-        let line = `** INFO ** ${await this._generateLine(msg, options)}`
-        console.info(line)
-        this._write(line)
+        if (Logger.LoggingLevel <= Logger.LEVELS.INFO){
+            let line = `** INFO ** ${await this._generateLine(msg, options)}`
+            console.info(line)
+            this._write(line)
+        }
     }
     /**
      * @param {string} msg
@@ -68,9 +73,11 @@ export class Logger {
      * @param {LoggingOptions} options.tags tags to help aggregate or search
      */
     async warn(msg, options){
-        let line = `** WARN ** ${await this._generateLine(msg, options)}`
-        console.warn(line)
-        this._write(line)
+        if (Logger.LoggingLevel <= Logger.LEVELS.WARN){
+            let line = `** WARN ** ${await this._generateLine(msg, options)}`
+            console.warn(line)
+            this._write(line)
+        }
     }
     /**
      * @param {string} msg
@@ -78,9 +85,11 @@ export class Logger {
      * @param {LoggingOptions} options.tags tags to help aggregate or search
      */
     async error(msg, options){
-        let line = `** ERROR ** ${await this._generateLine(msg, options)}`
-        console.error(line)
-        this._write(line)
+        if (Logger.LoggingLevel <= Logger.LEVELS.ERROR){
+            let line = `** ERROR ** ${await this._generateLine(msg, options)}`
+            console.error(line)
+            this._write(line)
+        }
     }
 
     /**
@@ -107,8 +116,9 @@ export class Logger {
         }
     }
 
-    getLoggingLevel(){
-        return this.loggingLevel
+    static getLoggingLevel(){
+        console.log(`Currently logging at: ${Logger.LoggingLevel}`)
+        return Logger.LoggingLevel
     }
     /**
      * Set the logging level of the logger.
