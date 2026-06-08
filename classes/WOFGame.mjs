@@ -34,7 +34,7 @@ export class WOFGame{
         /** @type {boolean} */
         this.isWaitingForGuess = false
         /** @type {BoardQueue} */
-       this.PuzzleQueue = new BoardQueue()
+       this.PuzzleQueue = new BoardQueue(this.GameLogger.filePath)
        this.Board.revealAllLetters()
     }
 
