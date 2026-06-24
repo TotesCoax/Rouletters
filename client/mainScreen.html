@@ -16,32 +16,66 @@
             <div id="guessInputContainer">
                 <form id="guessForm">
                     <label for="guessInput">Enter guess:</label>
-                    <input type="text" name="guessInput" id="guessInput" size="1" autocomplete="off">
+                    <input type="text" name="guessInput" id="guessInput" size="8" autocomplete="off">
                     <button type="submit" id="guessSubmitButton">Submit</button>
                 </form>
                 <button type="button" id="solveButton">Solve</button>
             </div>
                 <div id="admin">
                     <div id="messageCenter"></div>
-                    <button type="button" id="gamestateRefreshButton">Refresh</button>
-                    <button type="button" id="nextRoundButton">Next Round</button>
                     <div>
-                        <label for="gameFileUpload"></label>
-                        <input type="file" name="gameFileUpload" id="gameFileUpload" accept=".csv">
-                        <button type="button" id="gameFileButton">Upload</button>
+                        <p>Game Admin</p>
+                        <button type="button" id="gamestateRefreshButton">Refresh</button>
+                        <button type="button" id="nextRoundButton">Next Round</button>
+                        <button popovertarget="fileUploadDialog">File</button>
+                        <button popovertarget="manualModeDialog">Admin</button>
                     </div>
-                    <div id="manualMode" class="hidden">
-                        <p>Manual testing zone</p>
-                        <label for="addPlayer">add Player:</label>
-                        <input type="text" id="addPlayer" name="addPlayer">
-                        <button type="button" id="addPlayerButton">+</button>
-                        <label for="playerSelect"></label>
-                        <select name="playerSelect" id="playerSelect">
-                            <option value=""></option>
-                        </select>
-                        <button type="button" id="removePlayerButton">-</button>
-                        <button type="button" id="offlineSpinButton">SPIN</button>
-                    </div>            
+
+                    <dialog id="fileUploadDialog" popover>
+                        <h2>File Admin</h2>
+                        <div class="dialog-container">
+                            <div class="dialog-item">
+                                <p>Template file located <a target="_blank" href="https://docs.google.com/spreadsheets/d/1K3MJAu7AIvmSTW7jIHqQUHtkeqDXl1ySn-Ww7foBz-k/edit?usp=sharing">here</a>.</p>
+                                <ul>
+                                    <li>File &rightarrow; Make a copy to your own Google Drive or download a copy to your own device if you have a spreadsheet software you prefer.</li>
+                                    <li>Don't delete the headers as the program expects them.</li>
+                                    <li>Fill in the cells of Columns A and B below the headers with as many puzzles as you want.</li>
+                                    <li>File &rightarrow; Download as CSV from Google Drive or save as CSV if using your own software.</li>
+                                    <li>Upload to the board page for game use.</li>
+                                </ul>
+                            </div>
+                            <div class="dialog-item">
+                                <label for="gameFileUpload">Please upload file from template:</label>
+                                <input type="file" name="gameFileUpload" id="gameFileUpload" accept=".csv">
+                                <button type="button" id="gameFileButton">Upload</button>
+                            </div>
+                            <div class="dialog-item">
+                                <button popovertarget="fileUploadDialog" popovertargetaction="hide">Close</button>
+                            </div>
+                        </div>
+                    </dialog>
+                    <dialog id="manualModeDialog" popover>
+                        <h2>Manual controls</h2>
+                        <div id="manualMode" class="dialog-container">
+                            <div>
+                                <label for="addPlayer">Add player:</label>
+                                <input type="text" id="addPlayer" name="addPlayer">
+                                <button type="button" id="addPlayerButton">+</button>
+                            </div>
+                            <div>
+                                <label for="playerSelect">Remove player:</label>
+                                <select name="playerSelect" id="playerSelect">
+                                    <option value=""></option>
+                                </select>
+                                <button type="button" id="removePlayerButton">-</button>
+                            </div>
+                            <div>
+                                <label for="offlineSpinButton">Manual Spin</label>
+                                <button type="button" id="offlineSpinButton">SPIN</button>
+                            </div>
+                            <button popovertarget="manualModeDialog" popovertargetaction="hide">Close</button>
+                        </div>
+                    </dialog>
                 </div>
             <div id="qrCode"><img src="./qrcode.png" alt="QR Code for game sessions"></div>
         </div>

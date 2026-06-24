@@ -16,6 +16,7 @@
 #guessInputContainer {
     display: flex;
     align-items: center;
+    gap: 30px;
 }
 
 #usedLettersDisplay {
@@ -36,8 +37,23 @@
     padding: 1em;
 }
 
-#manualMode {
-    z-index: +1;
-    position: relative;
-    background-color: var(--white);
+dialog {
+    border-radius: 20px;
+    width: 50%;
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, .6);
+}
+
+.dialog-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.dialog-item {
+    margin: 10px;
 }
