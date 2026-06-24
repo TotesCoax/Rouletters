@@ -139,9 +139,11 @@ export class WOFGame{
             case 'bankrupt':
                 this.PlayerHandler.getCurrentPlayer().setScore(0)
                 this.PlayerHandler.advanceTurn()
+                this.setWaitingForSpin(true)
                 break;
             case 'lose a turn':
                 this.PlayerHandler.advanceTurn()
+                this.setWaitingForSpin(true)
                 break;
         
             default:
@@ -179,7 +181,7 @@ export class WOFGame{
 
         let guessResult = this.Board.handleGuess(letter.character)
 
-        if (guessResult < 0){
+        if (guessResult <= 0){
             return false
         }
         player.updateScore(-250)
@@ -209,7 +211,7 @@ export class WOFGame{
             spinPower = this.Wheel.spinWheel(speedValue),
             endingDeg = this.Wheel.getCurrentDeg(),
             wheelIndex = this.Wheel.getWheelIndex(),
-            initialValue = this.Wheel.getWheelValue()
+            initialValue = new String(this.Wheel.getWheelValue())
         
         this.handleSpecialSpace(this.Wheel.getWheelValue())
         let spinData = {start: startingDeg, power: spinPower, end: endingDeg, index: wheelIndex}
