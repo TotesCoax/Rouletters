@@ -27,7 +27,7 @@ const socket = io({transports: ['websocket', 'polling', 'flashsocket']})
 
 socket.on("connect", () => {
   console.log(socket.id)
-  let playerID = window.localStorage.getItem('playerInfo') ? getPlayerDataFromLocal().gameID : 'Nothing'
+  let playerID = window.localStorage.getItem('playerInfo') ? getPlayerDataFromLocal().gameID : 'NEW'
   console.log('Connected as: ', playerID)
   socket.emit('playerJoin', playerID, (res) => {
     console.log(res)
