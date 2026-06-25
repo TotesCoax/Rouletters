@@ -112,7 +112,13 @@ export class WOFGame{
      * @returns {boolean} true if successful, false if not
      */
     handleGuess(guess, playerID){
-        this.GameLogger.info(`Processing guess ${guess} from ${this.PlayerHandler.getPlayer(playerID).name}`,{tags:["wof","gameAction","process"]})
+        this.GameLogger.info(`Processing guess ${guess} from ${this.PlayerHandler.getPlayer(playerID).name}. Waiting for guess: ${this.isWaitingForGuess}`,{tags:["wof","gameAction","process"]})
+        
+        if (!this.isWaitingForGuess){
+            this.GameLogger.warn(`Guess was made when game is not waiting for a guess.`, {tags:["wof","gameAction"]})
+            return
+        }
+
         let letter = new Letter(guess),
             player = this.PlayerHandler.getPlayer(playerID)
 
@@ -123,12 +129,21 @@ export class WOFGame{
 
 
         if (letter.isVowel){
-            this.GameLogger.log('Vowel found')
-            return this.handleVowel(letter, player)
+            if(!this.isWaitingForSpin){
+                this.GameLogger.log('Vowel purchase being processed')
+                return this.handleVowel(letter, player)
+            } else {
+                this.GameLogger.warn(`Attempting to guess a vowel after a spin.`)
+            }
         }
-        if (letter.isLetter||letter.isNumber){
-            this.GameLogger.log('Consonant found')
-            return this.handleConsonant(letter, player)
+        if (this.isWaitingForSpin){
+            if (letter.isLetter||letter.isNumber){
+                this.GameLogger.log('Consonant found')
+                return this.handleConsonant(letter, player)
+            } else {
+                this.GameLogger.warn(`Attempting to guess a consonant without spinning.`)
+            }
+
         }
         return false
     }
@@ -223,6 +238,7 @@ export class WOFGame{
         this.GameLogger.info(`Puzzle solve processing`,{tags:["wof","gameAction","puzzle","process"]})
         this.Board.revealAllLetters()
         this.PlayerHandler.getCurrentPlayer().saveRoundScoretoTotalScore()
+        this.setWaitingForGuess(false)
     }
 
     //Server Related
@@ -243,7 +259,7 @@ export class WOFGame{
      * @param {boolean} value 
      */
     setWaitingForGuess(value){
-        this.GameLogger.log(`Setting waiting for guess status.`)
+        this.GameLogger.log(`Setting waiting for guess status: ${value}`)
         this.isWaitingForGuess = value
     }
     /**
