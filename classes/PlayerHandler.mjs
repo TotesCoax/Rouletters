@@ -7,6 +7,7 @@ export class PlayerHandler{
      */
     constructor(logFilePath ="./", options = {players:[]}){
         this.TurnLogger = new Logger(logFilePath, "PlayerHandler")
+        /** @type {Player[]} */
         this.players = options.players
         this.turnIndicator = 0
     }
