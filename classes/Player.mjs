@@ -55,6 +55,12 @@ export class Player{
     saveRoundScoretoTotalScore(){
         this.totalScore += this.score
     }
+    getSocketID(){
+        return this.socketID
+    }
+    setSocketID(ID){
+        this.socketID = id
+    }
 }
 
 // module.exports = { Player }
