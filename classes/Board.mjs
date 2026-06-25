@@ -19,6 +19,7 @@ export class Board{
         this.populateBoard(this.racks)
         this.guessedLetters = []
         this.clue = options.clue
+        this.isSolved = false
     }
     /**
      * Checks if phrase is too long to parse into the board.
@@ -173,6 +174,13 @@ export class Board{
             })
         })
         this.BoardLogger.info(`Board has been revealed`)
+    }
+    /**
+     * 
+     * @param {boolean} value 
+     */
+    setIsSolved(value){
+        this.isSolved = value
     }
 }
 

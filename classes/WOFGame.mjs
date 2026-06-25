@@ -114,6 +114,11 @@ export class WOFGame{
     handleGuess(guess, playerID){
         this.GameLogger.info(`Processing guess ${guess} from ${this.PlayerHandler.getPlayer(playerID).name}. Waiting for guess: ${this.isWaitingForGuess}`,{tags:["wof","gameAction","process"]})
         
+        if(this.Board.isSolved){
+            this.GameLogger.warn(`Guess was made after board has been solved.`)
+            return
+        }
+
         if (!this.isWaitingForGuess){
             this.GameLogger.warn(`Guess was made when game is not waiting for a guess.`, {tags:["wof","gameAction"]})
             return
@@ -239,6 +244,7 @@ export class WOFGame{
         this.Board.revealAllLetters()
         this.PlayerHandler.getCurrentPlayer().saveRoundScoretoTotalScore()
         this.setWaitingForGuess(false)
+        this.Board.setIsSolved(true)
     }
 
     //Server Related
