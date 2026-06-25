@@ -56,7 +56,7 @@ async function main(){
             if (WOF.PlayerHandler.players.length <= 0){
                 return
             }
-            ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(WOF.getSocketIDForActivePlayer)}`)
+            ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(WOF.getSocketIDForActivePlayer()).name}`)
             let currentPlayer = WOF.getSocketIDForActivePlayer()
             socket.to(currentPlayer).emit('yourTurn', "You're up, dingus")
         }
@@ -108,7 +108,16 @@ async function main(){
         socket.on('offlineSpin', (data) => {
             ServerLogger.log(`Offline Spin received ${data}`, {tags: ["gameAction", "test", "socketIO"]})
             let spinValue = (WOF.Wheel.getRandomValue(5, 40)/100)
-            let spinData =WOF.spinWheel(spinValue)
+            let spinData = WOF.spinWheel(spinValue)
+            if(spinData.power <= 180){
+                ServerLogger.warn(`Spin was not strong enough.`)
+                WOF.setWaitingForSpin(true)
+                WOF.setWaitingForGuess(false)
+            } else {
+                ServerLogger.info(`Spin was okay`)
+                WOF.setWaitingForSpin(false)
+                WOF.setWaitingForGuess(true)
+            }
             GameServer.io.to('board').emit('wheelSpin', spinData)
         })
     
@@ -125,7 +134,7 @@ async function main(){
                 callback(WOF.PlayerHandler.getPlayer(newPlayerID))
             } else {
                 // If the player exists, send them their player ID to confirm connection.
-                ServerLogger.info(`Player reconnect detected: ${WOF.PlayerHandler.getPlayer(id)}`, {tags: ["gameAction", "player"]})
+                ServerLogger.info(`Player reconnect detected: ${WOF.PlayerHandler.getPlayer(id).name}`, {tags: ["gameAction", "player"]})
                 WOF.PlayerHandler.getPlayer(id).setSocketID(socket.id)
                 WOF.PlayerHandler.getPlayer(id).setConnectedStatus(true)
                 changeNotificationToBoard()
@@ -149,6 +158,7 @@ async function main(){
                 let spinData = WOF.spinWheel(data.value)
                 GameServer.io.to('board').emit('wheelSpin', spinData)
                 if(spinData.power <= 180){
+                    ServerLogger.warn(`Spin was not strong enough.`)
                     WOF.setWaitingForSpin(true)
                     WOF.setWaitingForGuess(false)
                 } else {
