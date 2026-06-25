@@ -113,15 +113,15 @@ export class WOFGame{
      */
     handleGuess(guess, playerID){
         this.GameLogger.info(`Processing guess ${guess} from ${this.PlayerHandler.getPlayer(playerID).name}. Waiting for guess: ${this.isWaitingForGuess}`,{tags:["wof","gameAction","process"]})
-        
+        console.log(this)
         if(this.Board.isSolved){
             this.GameLogger.warn(`Guess was made after board has been solved.`)
-            return
+            return true
         }
 
         if (!this.isWaitingForGuess){
             this.GameLogger.warn(`Guess was made when game is not waiting for a guess.`, {tags:["wof","gameAction"]})
-            return
+            return true
         }
 
         let letter = new Letter(guess),
@@ -134,23 +134,27 @@ export class WOFGame{
 
 
         if (letter.isVowel){
-            if(!this.isWaitingForSpin){
+            if(this.isWaitingForSpin){
                 this.GameLogger.log('Vowel purchase being processed')
                 return this.handleVowel(letter, player)
             } else {
                 this.GameLogger.warn(`Attempting to guess a vowel after a spin.`)
+                return true
             }
         }
-        if (this.isWaitingForSpin){
+        if (!this.isWaitingForSpin){
+            this.GameLogger.log(`Triggered`)
             if (letter.isLetter||letter.isNumber){
                 this.GameLogger.log('Consonant found')
                 return this.handleConsonant(letter, player)
             } else {
                 this.GameLogger.warn(`Attempting to guess a consonant without spinning.`)
+                return true
             }
 
         }
-        return false
+        this.GameLogger.log(`Guess Fallback triggered.`)
+        return true
     }
 
     handleSpecialSpace(value){
@@ -250,9 +254,10 @@ export class WOFGame{
     //Server Related
 
     handlePlayerDisconnect(socketID){
-        this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID)} disconnected`,{tags:["wof","player"]})
+        this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID).name} disconnected`,{tags:["wof","player"]})
         if(this.PlayerHandler.getPlayer(socketID)){
             this.PlayerHandler.getPlayer(socketID).setConnectedStatus(false)
+            this.GameLogger.log(`Player reconnect processed.`)
         }
     }
 
