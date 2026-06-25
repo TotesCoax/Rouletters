@@ -126,6 +126,7 @@ async function main(){
             } else {
                 // If the player exists, send them their player ID to confirm connection.
                 ServerLogger.info(`Player reconnect detected: ${WOF.PlayerHandler.getPlayer(id)}`, {tags: ["gameAction", "player"]})
+                WOF.PlayerHandler.getPlayer(id).setSocketID(socket.id)
                 WOF.PlayerHandler.getPlayer(id).setConnectedStatus(true)
                 changeNotificationToBoard()
                 callback(WOF.PlayerHandler.getPlayer(id))
