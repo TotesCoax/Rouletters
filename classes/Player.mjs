@@ -58,7 +58,7 @@ export class Player{
     getSocketID(){
         return this.socketID
     }
-    setSocketID(ID){
+    setSocketID(id){
         this.socketID = id
     }
 }
