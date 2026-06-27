@@ -1,5 +1,15 @@
 console.log('File Loaded')
 
+const turnResult = {
+        NOTHING: 0,
+        CORRECT: 1,
+        INCORRECT: 2,
+        SPIN: 3,
+        GUESS: 4,
+        LOSE: 5,
+        BANKRUPT: 6
+    }
+
 /**
  * @typedef {object} PlayerInfo
  * @property {string} gameID - id from the server
@@ -40,7 +50,7 @@ socket.on("connect", () => {
 const powerBar = document.getElementById("powerBar")
 
 
-socket.on('yourTurn', () => {
+socket.on(turnResult.SPIN, () => {
   console.log('Spin Turn Registered')
   powerBar.addEventListener('animationend', () => {
     powerBar.classList.remove('flashing')
