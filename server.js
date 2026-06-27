@@ -52,13 +52,13 @@ async function main(){
             changeNotificationToBoard()
         })
         // Direct to player message
-        function notificationToActivePlayer(){
+        function notificationToActivePlayer(eventCode = WOFGame.turnResult.NOTHING){
             if (WOF.PlayerHandler.players.length <= 0){
                 return
             }
             ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(WOF.getSocketIDForActivePlayer()).name}`)
             let currentPlayer = WOF.getSocketIDForActivePlayer()
-            socket.to(currentPlayer).emit('yourTurn', "You're up, dingus")
+            socket.to(currentPlayer).emit(WOFGame.turnResult.SPIN)
         }
         // Notice to Board screen that a change has occured and needs to rerender.
         function changeNotificationToBoard(){
@@ -68,10 +68,27 @@ async function main(){
     
         socket.on(EventCode.letterSubmission, (data) => {
             ServerLogger.info(`${data, WOF.PlayerHandler.getCurrentPlayer().name}'s guess: ${data}`, {tags:["gameAction", "socketIO"]})
-            WOF.playerGuess(data, WOF.PlayerHandler.getCurrentPlayer().gameID)
-            changeNotificationToBoard()
-            notificationToActivePlayer()
-            WOF.setWaitingForSpin(true)
+            let result = WOF.playerGuess(data, WOF.PlayerHandler.getCurrentPlayer().gameID)
+            switch (result) {                   
+                case WOFGame.turnResult.NOTHING:
+                    break;
+                case WOFGame.turnResult.CORRECT:
+                    break;
+                case WOFGame.turnResult.GUESS:
+                    break;
+                case WOFGame.turnResult.SPIN:
+                    break;
+                case WOFGame.turnResult.INCORRECT:
+                    break;
+                case WOFGame.turnResult.LOSE:
+                    break;
+                case WOFGame.turnResult.BANKRUPT:
+                    break;            
+                default:
+                    break;
+                }
+                changeNotificationToBoard()
+                notificationToActivePlayer(result)
         })
     
         socket.on('gameFile', (data) => {
@@ -80,15 +97,14 @@ async function main(){
             WOF.createNewBoard("Puzzles Loaded", "Press next round to begin!")
             WOF.Board.revealAllLetters()
             changeNotificationToBoard()
-            notificationToActivePlayer()
+            notificationToActivePlayer(WOFGame.turnResult.SPIN)
         })
     
         socket.on('nextRound', (data) => {
             ServerLogger.info(`Next round requested ${data}`, {tags: ["gameAction", "socketIO"]})
-            WOF.nextPuzzle()
+            let result = WOF.nextPuzzle()
             changeNotificationToBoard()
-            notificationToActivePlayer()
-            WOF.setWaitingForSpin(true)
+            notificationToActivePlayer(result)
         })
     
         //Manual Mode
@@ -108,17 +124,7 @@ async function main(){
         socket.on('offlineSpin', (data) => {
             ServerLogger.log(`Offline Spin received ${data}`, {tags: ["gameAction", "test", "socketIO"]})
             let spinValue = (WOF.Wheel.getRandomValue(5, 40)/100)
-            let spinData = WOF.spinWheel(spinValue)
-            if(spinData.power <= 180){
-                ServerLogger.warn(`Spin was not strong enough.`)
-                WOF.setWaitingForSpin(true)
-                WOF.setWaitingForGuess(false)
-            } else {
-                ServerLogger.info(`Spin was okay`)
-                WOF.setWaitingForSpin(false)
-                WOF.setWaitingForGuess(true)
-            }
-            GameServer.io.to('board').emit('wheelSpin', spinData)
+            serverSpin({id: WOF.PlayerHandler.getCurrentPlayer().gameID, value: spinValue})
         })
     
         // Player Events
@@ -140,7 +146,7 @@ async function main(){
                 changeNotificationToBoard()
                 callback(WOF.PlayerHandler.getPlayer(id))
                 if (WOF.PlayerHandler.isActivePlayer(id)){
-                    notificationToActivePlayer()
+                    notificationToActivePlayer(WOFGame.turnResult.NOTHING)
                 }
             }
             // Add them to the players channel
@@ -149,24 +155,41 @@ async function main(){
         })
         // A player sends spin data to the server
         socket.on(EventCode.speedData, (data) => {
+            serverSpin(data)
+        })
+
+        /**
+         * Function that handles the spin mechanics so I can do normal and manual spins the same.
+         * @param {Object}} data packet from slient
+         * @prop {string} data.id player id
+         * @prop {number} data.value spin value
+         */
+        function serverSpin(data){
+            if(!WOF.isWaitingForSpin){
+                ServerLogger.log(`Game is not waiting for spin value.`)
+                return
+            }
             ServerLogger.log(`Spin data from player: ${data} Waiting for guess: ${WOF.isWaitingForGuess} Waiting for spin: ${WOF.isWaitingForSpin}`, {tags:["gameAction", "player"]})
             // Check if the player is the active player, ignore all other submissions (let the players have freedom to fiddle with it)
             if(WOF.PlayerHandler.isActivePlayer(data.id)){
-                if(!WOF.isWaitingForSpin){
-                    return
-                }
-                let spinData = WOF.spinWheel(data.value)
-                GameServer.io.to('board').emit('wheelSpin', spinData)
-                if(spinData.power <= 180){
-                    ServerLogger.warn(`Spin was not strong enough.`)
-                    WOF.setWaitingForSpin(true)
-                    WOF.setWaitingForGuess(false)
-                } else {
-                    WOF.setWaitingForSpin(false)
-                    WOF.setWaitingForGuess(true)
-                }
+                let spinResult = WOF.spinWheel(data.value)
+                switch (spinResult.result) {
+                    case WOFGame.turnResult.BANKRUPT:
+                        notificationToActivePlayer(WOFGame.turnResult.SPIN)
+                        break
+                    case WOFGame.turnResult.LOSE:
+                        notificationToActivePlayer(WOFGame.turnResult.SPIN)
+                        break
+                    case WOFGame.turnResult.SPIN:
+                        ServerLogger.warn(`Spin was not strong enough.`)
+                        notificationToActivePlayer(spinResult.result)
+                        break
+                    default:
+                        ServerLogger.log(`Did not land on a special space.`)
+                    }
+                    GameServer.io.to('board').emit('wheelSpin', spinResult.spinData)
             }
-        })
+        }
     
         socket.on('spinAnimEnded', (data) => {
             ServerLogger.log(`Spin animation ended`, {tags:["gameAction", "board"]})
@@ -174,7 +197,7 @@ async function main(){
                 socket.to('board').emit('guessReady', 'Ready for a guess input')
                 return
             }
-            notificationToActivePlayer()
+            notificationToActivePlayer(WOFGame.turnResult.GUESS)
         })
     
         socket.on(EventCode.nameChange, (data) => {
