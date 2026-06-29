@@ -63,11 +63,24 @@
                                 <button type="button" id="addPlayerButton">+</button>
                             </div>
                             <div>
-                                <label for="playerSelect">Remove player:</label>
+                                <p>Adjust Gamestate</p>
+                                <label for="playerSelect">Player:</label>
                                 <select name="playerSelect" id="playerSelect">
                                     <option value=""></option>
                                 </select>
-                                <button type="button" id="removePlayerButton">-</button>
+                                <ul>
+                                    <li>
+                                        <button type="button" id="removePlayerButton">Remove</button>
+                                    </li>
+                                    <li>
+                                        <label for="setScoreInput">Set Score:</label>
+                                        <input type="number" id="setScoreInput" size="8" step="50">
+                                        <button type="button" id="setScoreButton">Submit</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" id="setActiveButton">Set Active</button>
+                                    </li>
+                                </ul>
                             </div>
                             <div>
                                 <label for="offlineSpinButton">Manual Spin</label>

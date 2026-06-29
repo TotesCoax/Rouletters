@@ -120,7 +120,24 @@ async function main(){
             let removed = WOF.PlayerHandler.removePlayer(data)
             changeNotificationToBoard()
         })
-    
+
+        socket.on('setScore', (data) =>{
+            let playerName = data.name,
+                targetScore = data.score,
+                targetPlayer = WOF.PlayerHandler.getPlayer(playerName)
+
+            targetPlayer.setScore(targetScore)
+            changeNotificationToBoard()
+        })
+        
+        socket.on('setActive', (data) =>{
+            // It has to be done this way until I refactor the setActivePlayer function.
+            let playerIndex = WOF.PlayerHandler.getPlayerIndex(data)
+            WOF.PlayerHandler.turnIndicator = playerIndex
+            WOF.PlayerHandler.setActivePlayer()
+            changeNotificationToBoard()
+        })
+
         socket.on('offlineSpin', (data) => {
             ServerLogger.log(`Offline Spin received ${data}`, {tags: ["gameAction", "test", "socketIO"]})
             let spinValue = (WOF.Wheel.getRandomValue(5, 40)/100)

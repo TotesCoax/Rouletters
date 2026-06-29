@@ -221,10 +221,60 @@ function spinWheel(dataFromServer){
         socket.emit('manualAdd', playerName)
     }
 
+    // Check for Selected Player
+    function isPlayerSelected(){
+        let playerName = new String(document.querySelector('#playerSelect').value)
+        if (playerName.length < 0){
+            return false
+        } else {
+            return true
+        }
+    }
+
+    function getPlayer(){
+        let playerSelect = document.getElementById("playerSelect")
+        if(isPlayerSelected()){
+            let playerName = new String(document.querySelector('#playerSelect').value)
+            playerSelect.style.border = ""
+            return playerName
+        } else {
+            playerSelect.style.border = "3px red solid"
+            return ""
+        }
+    }
+
     // Remove Player
     const removePlayerButton = document.getElementById('removePlayerButton')
     removePlayerButton.addEventListener('click', removePlayer)
     function removePlayer(){
+        if (!isPlayerSelected()){
+            return
+        }
         let playerName = document.querySelector('#playerSelect').value
         socket.emit('manualRemove', playerName)
+    }
+
+    // Set Score
+    const /** @type {HTMLInputElement} */ setScoreInput = document.getElementById('setScoreInput')
+    const setScoreButton = document.getElementById('setScoreButton')
+    setScoreButton.addEventListener('click', setScore)
+    function setScore(){
+        if (!isPlayerSelected()){
+            return
+        }
+        let playerName = document.querySelector('#playerSelect').value,
+            score = setScoreInput.value
+ 
+        socket.emit('setScore', {name: playerName, score: score})
+    }
+
+    // Set Active
+    const setActiveButon = document.getElementById('setActiveButton')
+    setActiveButon.addEventListener('click', setActive)
+    function setActive(){
+        if (!isPlayerSelected()){
+            return
+        }
+        let playerName = document.querySelector('#playerSelect').value
+        socket.emit('setActive', playerName)
     }
