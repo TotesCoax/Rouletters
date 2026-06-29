@@ -52,13 +52,13 @@ async function main(){
             changeNotificationToBoard()
         })
         // Direct to player message
-        function notificationToActivePlayer(eventCode = WOFGame.turnResult.NOTHING){
+        function notificationToActivePlayer(eventCode = WOFGame.TURNRESULT.NOTHING){
             if (WOF.PlayerHandler.players.length <= 0){
                 return
             }
             ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(WOF.getSocketIDForActivePlayer()).name}`)
             let currentPlayer = WOF.getSocketIDForActivePlayer()
-            socket.to(currentPlayer).emit(WOFGame.turnResult.SPIN)
+            socket.to(currentPlayer).emit(WOFGame.TURNRESULT.SPIN)
         }
         // Notice to Board screen that a change has occured and needs to rerender.
         function changeNotificationToBoard(){
@@ -70,19 +70,19 @@ async function main(){
             ServerLogger.info(`${data, WOF.PlayerHandler.getCurrentPlayer().name}'s guess: ${data}`, {tags:["gameAction", "socketIO"]})
             let result = WOF.playerGuess(data, WOF.PlayerHandler.getCurrentPlayer().gameID)
             switch (result) {                   
-                case WOFGame.turnResult.NOTHING:
+                case WOFGame.TURNRESULT.NOTHING:
                     break;
-                case WOFGame.turnResult.CORRECT:
+                case WOFGame.TURNRESULT.CORRECT:
                     break;
-                case WOFGame.turnResult.GUESS:
+                case WOFGame.TURNRESULT.GUESS:
                     break;
-                case WOFGame.turnResult.SPIN:
+                case WOFGame.TURNRESULT.SPIN:
                     break;
-                case WOFGame.turnResult.INCORRECT:
+                case WOFGame.TURNRESULT.INCORRECT:
                     break;
-                case WOFGame.turnResult.LOSE:
+                case WOFGame.TURNRESULT.LOSE:
                     break;
-                case WOFGame.turnResult.BANKRUPT:
+                case WOFGame.TURNRESULT.BANKRUPT:
                     break;            
                 default:
                     break;
@@ -97,7 +97,7 @@ async function main(){
             WOF.createNewBoard("Puzzles Loaded", "Press next round to begin!")
             WOF.Board.revealAllLetters()
             changeNotificationToBoard()
-            notificationToActivePlayer(WOFGame.turnResult.SPIN)
+            notificationToActivePlayer(WOFGame.TURNRESULT.SPIN)
         })
     
         socket.on('nextRound', (data) => {
@@ -146,7 +146,7 @@ async function main(){
                 changeNotificationToBoard()
                 callback(WOF.PlayerHandler.getPlayer(id))
                 if (WOF.PlayerHandler.isActivePlayer(id)){
-                    notificationToActivePlayer(WOFGame.turnResult.NOTHING)
+                    notificationToActivePlayer(WOFGame.TURNRESULT.NOTHING)
                 }
             }
             // Add them to the players channel
@@ -174,13 +174,13 @@ async function main(){
             if(WOF.PlayerHandler.isActivePlayer(data.id)){
                 let spinResult = WOF.spinWheel(data.value)
                 switch (spinResult.result) {
-                    case WOFGame.turnResult.BANKRUPT:
-                        notificationToActivePlayer(WOFGame.turnResult.SPIN)
+                    case WOFGame.TURNRESULT.BANKRUPT:
+                        notificationToActivePlayer(WOFGame.TURNRESULT.SPIN)
                         break
-                    case WOFGame.turnResult.LOSE:
-                        notificationToActivePlayer(WOFGame.turnResult.SPIN)
+                    case WOFGame.TURNRESULT.LOSE:
+                        notificationToActivePlayer(WOFGame.TURNRESULT.SPIN)
                         break
-                    case WOFGame.turnResult.SPIN:
+                    case WOFGame.TURNRESULT.SPIN:
                         ServerLogger.warn(`Spin was not strong enough.`)
                         notificationToActivePlayer(spinResult.result)
                         break
@@ -197,7 +197,7 @@ async function main(){
                 socket.to('board').emit('guessReady', 'Ready for a guess input')
                 return
             }
-            notificationToActivePlayer(WOFGame.turnResult.GUESS)
+            notificationToActivePlayer(WOFGame.TURNRESULT.GUESS)
         })
     
         socket.on(EventCode.nameChange, (data) => {

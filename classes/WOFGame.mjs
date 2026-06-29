@@ -18,7 +18,7 @@ export class WOFGame{
      *  List of turn results
      *  @static
      */
-    static turnResult = {
+    static TURNRESULT = {
         NOTHING: 0,
         CORRECT: 1,
         INCORRECT: 2,
@@ -93,7 +93,7 @@ export class WOFGame{
         this.GameLogger.log(`Next Puzzle requested, upcoming: ${nextPuzz.clue}, ${nextPuzz.puzzle}`, {tags:["wof","gameAction","setup"]})
         this.startNewRound(nextPuzz.clue, nextPuzz.puzzle)
         this.setWaitingForSpin(true)
-        return WOFGame.turnResult.SPIN
+        return WOFGame.TURNRESULT.SPIN
     }
 
     // Utility functions
@@ -135,13 +135,13 @@ export class WOFGame{
         //Don't need guesses for a solved board.
         if(this.Board.isSolved){
             this.GameLogger.warn(`Guess was made after board has been solved.`)
-            return WOFGame.turnResult.NOTHING
+            return WOFGame.TURNRESULT.NOTHING
         }
 
         //I'm not exactly sure when this would trigger... maybe on the first spin?
         if (!this.isWaitingForGuess){
             this.GameLogger.warn(`Guess was made when game is not waiting for a guess.`, {tags:["wof","gameAction"]})
-            return WOFGame.turnResult.NOTHING
+            return WOFGame.TURNRESULT.NOTHING
         }
 
         let letter = new Letter(guess),
@@ -159,7 +159,7 @@ export class WOFGame{
                 return this.handleVowel(letter, player)
             } else {
                 this.GameLogger.warn(`Attempting to guess a vowel after a spin.`)
-                return WOFGame.turnResult.GUESS
+                return WOFGame.TURNRESULT.GUESS
             }
         }
         if (!this.isWaitingForSpin){
@@ -169,12 +169,12 @@ export class WOFGame{
                 return this.handleConsonant(letter, player)
             } else {
                 this.GameLogger.warn(`Attempting to guess a consonant without spinning.`)
-                return WOFGame.turnResult.GUESS
+                return WOFGame.TURNRESULT.GUESS
             }
 
         }
         this.GameLogger.error(`Nothing Fallback triggered.`)
-        return WOFGame.turnResult.NOTHING
+        return WOFGame.TURNRESULT.NOTHING
     }
 
     /**
@@ -191,15 +191,15 @@ export class WOFGame{
                 this.setWaitingForSpin(true)
                 this.setWaitingForGuess(true)
                 this.GameLogger.info(`Bankrupt processed.`)
-                return WOFGame.turnResult.BANKRUPT
+                return WOFGame.TURNRESULT.BANKRUPT
             case 'lose a turn':
                 this.PlayerHandler.advanceTurn()
                 this.setWaitingForSpin(true)
                 this.setWaitingForGuess(true)
                 this.GameLogger.info(`Lost a turn processed.`)
-                return WOFGame.turnResult.LOSE
+                return WOFGame.TURNRESULT.LOSE
             default:
-                return WOFGame.turnResult.NOTHING
+                return WOFGame.TURNRESULT.NOTHING
         }
     }
 
@@ -215,10 +215,10 @@ export class WOFGame{
             guessResult = this.Board.handleGuess(letter.character)
 
         if (guessResult <= 0){
-            return WOFGame.turnResult.INCORRECT
+            return WOFGame.TURNRESULT.INCORRECT
         }        
         player.updateScore(wheelValue * guessResult)
-        return WOFGame.turnResult.CORRECT
+        return WOFGame.TURNRESULT.CORRECT
     }
 
     /**
@@ -230,16 +230,16 @@ export class WOFGame{
     handleVowel(letter, player){
         this.GameLogger.info(`Vowel processing: ${letter.character}`,{tags:["wof","gameAction","process"]})
         if (player.score <= 250){
-            return WOFGame.turnResult.GUESS
+            return WOFGame.TURNRESULT.GUESS
         }
 
         let guessResult = this.Board.handleGuess(letter.character)
 
         if (guessResult <= 0){
-            return WOFGame.turnResult.INCORRECT
+            return WOFGame.TURNRESULT.INCORRECT
         }
         player.updateScore(-250)
-        return WOFGame.turnResult.CORRECT
+        return WOFGame.TURNRESULT.CORRECT
     }
 
     /**
@@ -268,14 +268,14 @@ export class WOFGame{
         
         let spinData = {start: startingDeg, power: spinPower, end: endingDeg, index: wheelIndex}
         if (spinData <= 180){
-            return {result: WOFGame.turnResult.SPIN, spinData: spinData}
+            return {result: WOFGame.TURNRESULT.SPIN, spinData: spinData}
         }
         let specialCheck = this.handleSpecialSpace(this.Wheel.getWheelValue())
-        if (specialCheck !== WOFGame.turnResult.NOTHING){
+        if (specialCheck !== WOFGame.TURNRESULT.NOTHING){
             return {result: specialCheck, spinData: spinData}
         }
         this.GameLogger.info(`Wheel spun from ${initialValue} to ${this.Wheel.getWheelValue()}`,{tags:["wof","wheel","gameAction"]})
-        return {result: WOFGame.turnResult.SPIN, spinData: spinData}
+        return {result: WOFGame.TURNRESULT.SPIN, spinData: spinData}
     }
 
     solvedPuzzle(){
@@ -284,7 +284,7 @@ export class WOFGame{
         this.PlayerHandler.getCurrentPlayer().saveRoundScoretoTotalScore()
         this.setWaitingForGuess(false)
         this.Board.setIsSolved(true)
-        return WOFGame.turnResult.NOTHING
+        return WOFGame.TURNRESULT.NOTHING
     }
 
     //Server Related

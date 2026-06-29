@@ -1,6 +1,6 @@
 console.log('File Loaded')
 
-const turnResult = {
+const TURNRESULT = {
         NOTHING: 0,
         CORRECT: 1,
         INCORRECT: 2,
@@ -50,7 +50,7 @@ socket.on("connect", () => {
 const powerBar = document.getElementById("powerBar")
 
 
-socket.on(turnResult.SPIN, () => {
+socket.on(TURNRESULT.SPIN, () => {
   console.log('Spin Turn Registered')
   powerBar.addEventListener('animationend', () => {
     powerBar.classList.remove('flashing')
