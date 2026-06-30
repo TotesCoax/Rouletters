@@ -1,7 +1,10 @@
 /* Clue container */
 
 #clueContainer {
-    grid-area: clue;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #clueContainer p {
@@ -9,3 +12,10 @@
     margin: 0;
 }
 
+
+#clueContainer p {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: var(--white);
+    padding: 3% 6%;
+    border-radius: 1vw;
+}

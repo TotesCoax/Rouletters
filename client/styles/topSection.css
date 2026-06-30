@@ -2,7 +2,7 @@
 
 #topSection {
     display: flex;
-    grid-area: title;
+    flex-wrap: wrap;
     width: 100vw;
     justify-content: space-evenly;
 }

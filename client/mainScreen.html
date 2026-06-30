@@ -86,21 +86,26 @@
                                 <label for="offlineSpinButton">Manual Spin</label>
                                 <button type="button" id="offlineSpinButton">SPIN</button>
                             </div>
+                            <div id="qrCode"><img src="./qrcode.png" alt="QR Code for game sessions"></div>
                             <button popovertarget="manualModeDialog" popovertargetaction="hide">Close</button>
                         </div>
                     </dialog>
                 </div>
-            <div id="qrCode"><img src="./qrcode.png" alt="QR Code for game sessions"></div>
         </div>
         <div id="mainBoard"></div>
-        <div id="wheelHolder">
-            <div id="wheelContainer">
+        <div id="gameDetailsContainer">
+            <div>
+                <div id="wheelHolder">
+                    <div id="wheelIndicator"></div>
+                    <div id="wheelContainer">
+                    </div>
+                </div>
             </div>
-            <div id="wheelIndicator"></div>
+            <div id="clueGuessedContainer">
+                <div id="clueContainer"></div>
+                <div id="usedLettersDisplay"></div>
+            </div>
         </div>
-
-        <div id="clueContainer"></div>
-        <div id="usedLettersDisplay"></div>
         <div id="playerContainer"></div>
     </div>
 </body>

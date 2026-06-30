@@ -2,13 +2,22 @@
 
 /* Board stuff */
 #mainBoard {
-    grid-area: board;
+    aspect-ratio: 2/1;
+    width: clamp(1000px, 65vw, 80%);
+    container-type: inline-size;
+    display: flex;
 }
 
 #mainBoard table {
     width: 100%;
-    height: 100%;
     border-spacing: .25rem;
+    display: grid;
+    grid: repeat(4, 1fr) / 1fr;
+}
+
+#mainBoard tr {
+    display: grid;
+    grid: 1fr / repeat(12, 1fr);
 }
 
 #mainBoard p:not(.processed){
@@ -19,8 +28,7 @@
     background-color: var(--red);
     border-radius: 25%;
     padding: 0;
-    width: calc(100%/12);
-    height: calc(100%/4);
+    align-content: center;
 }
 
 #mainBoard td:nth-child(even){
@@ -43,7 +51,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     text-align: center;
-    font-size: 10vh;
+    font-size: 8cqw;
     margin: 0;
 }
 
@@ -53,12 +61,12 @@
 }
 
 #usedLettersDisplay {
-    grid-area: guessed;
     background-color: var(--white);
     border-radius: 1vh;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    width: 80%;
 }
 
 #usedLettersDisplay h6, #usedLettersDisplay p {
@@ -70,15 +78,17 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
-#clueContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+#usedLettersDisplay p {
+    min-height: 1.5rem;
+    font-size: 1.5rem;
 }
 
-#clueContainer p {
-    font-family: 'Times New Roman', Times, serif;
-    background-color: var(--white);
-    padding: 3% 6%;
-    border-radius: 1vw;
+#gameDetailsContainer {
+    width: clamp(400px, 30vw, 50vw);
+}
+
+#clueGuessedContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
