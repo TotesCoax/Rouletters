@@ -27,7 +27,9 @@ async function main(){
         ServerLogger.log(`New connection ${socket.id}`, {tags: ["connect", "socketIO"]})
         socket.on(EventCode.disconnect, (reason) => {
             ServerLogger.log(`${WOF.PlayerHandler.getPlayer(socket.id)} disconnected ${reason} ${socket.id}`, {tags: ["disconnect", "socketIO"]})
-            WOF.handlePlayerDisconnect(socket.id)
+            if(socket.id !== WOF.getSocketBoardSocketID()){
+                WOF.handlePlayerDisconnect(socket.id)
+            }
             changeNotificationToBoard()
         })
         // Board Events
@@ -103,6 +105,9 @@ async function main(){
         socket.on('nextRound', (data) => {
             ServerLogger.info(`Next round requested ${data}`, {tags: ["gameAction", "socketIO"]})
             let result = WOF.nextPuzzle()
+            if (result === WOFGame.TURNRESULT.NOTHING){
+                ServerLogger.error(`Next round requested with no puzzles in queue.`)
+            }
             changeNotificationToBoard()
             notificationToActivePlayer(result)
         })

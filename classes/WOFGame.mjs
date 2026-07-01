@@ -51,6 +51,7 @@ export class WOFGame{
         /** @type {BoardQueue} */
        this.PuzzleQueue = new BoardQueue(logFileDirectory)
        this.Board.revealAllLetters()
+       this.boardSocketID = ""
     }
 
     // Setup Functions
@@ -89,6 +90,9 @@ export class WOFGame{
      * @returns {WOFGame.turnResult} returns a set turn result value
      */
     nextPuzzle(){
+        if (this.PuzzleQueue.isEmpty){
+            return WOFGame.TURNRESULT.NOTHING
+        }
         let nextPuzz = this.PuzzleQueue.dequeue()
         this.GameLogger.log(`Next Puzzle requested, upcoming: ${nextPuzz.clue}, ${nextPuzz.puzzle}`, {tags:["wof","gameAction","setup"]})
         this.startNewRound(nextPuzz.clue, nextPuzz.puzzle)
@@ -289,12 +293,20 @@ export class WOFGame{
 
     //Server Related
 
+    getSocketBoardSocketID(){
+        return this.boardSocketID
+    }
+
+    setSocketBoardSocketID(id){
+        this.boardSocketID = id
+    }
+
     handlePlayerDisconnect(socketID){
         try {
             this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID).name} disconnected`,{tags:["wof","player"]})            
         } catch (error) {
             console.log(error)
-            console.log(this.PlayerHandler.players)
+            console.log(socketID, this.PlayerHandler.getPlayer(socketID) ,this.PlayerHandler.players)
         }
         if(this.PlayerHandler.getPlayer(socketID)){
             this.PlayerHandler.getPlayer(socketID).setConnectedStatus(false)
