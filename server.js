@@ -43,7 +43,8 @@ async function main(){
         })
         // The Board requests a gamestate, usually after a refresh or disconnect event.
         socket.on(EventCode.gamestateRequest, (id, callback) => {
-            ServerLogger.info(`Board request from: ${id}`, {tags: ["gameAction", "socketIO"]})
+            // If this is on, the logs get flooded from every player update.
+            // ServerLogger.info(`Board request from: ${id}`, {tags: ["gameAction", "socketIO"]})
             // The server sends a copy of the game state to the board.
             callback(WOF.getGamestate())
         })
