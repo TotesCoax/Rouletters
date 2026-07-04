@@ -28,6 +28,7 @@ async function main(){
         socket.on(EventCode.disconnect, (reason) => {
             ServerLogger.log(`${WOF.PlayerHandler.getPlayer(socket.id)} disconnected ${reason} ${socket.id}`, {tags: ["disconnect", "socketIO"]})
             if(socket.id !== WOF.getSocketBoardSocketID()){
+                ServerLogger.log(`Board socket check: ${socket.id == WOF.getSocketBoardSocketID} Socket: ${socket.id}  File: ${WOF.getSocketBoardSocketID}`)
                 WOF.handlePlayerDisconnect(socket.id)
             }
             changeNotificationToBoard()
