@@ -179,6 +179,7 @@ async function main(){
         })
         // A player sends spin data to the server
         socket.on(EventCode.speedData, (data) => {
+            ServerLogger.log(`Speeddata rec'd from ${WOF.PlayerHandler.getPlayer(socket.id)}: ${data}`)
             serverSpin(data)
         })
 
