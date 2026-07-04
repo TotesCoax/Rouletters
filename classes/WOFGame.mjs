@@ -265,13 +265,14 @@ export class WOFGame{
      */
     spinWheel(speedValue){
         let startingDeg = this.Wheel.getCurrentDeg(),
+            initialValue = new String(this.Wheel.getWheelValue()),
             spinPower = this.Wheel.spinWheel(speedValue),
             endingDeg = this.Wheel.getCurrentDeg(),
             wheelIndex = this.Wheel.getWheelIndex(),
-            initialValue = new String(this.Wheel.getWheelValue())
-        
-        let spinData = {start: startingDeg, power: spinPower, end: endingDeg, index: wheelIndex}
-        if (spinData <= 180){
+            spinData = {start: startingDeg, power: spinPower, end: endingDeg, index: wheelIndex}
+
+        if (spinPower <= 180){
+            this.GameLogger.info(`Spin was not strong enough: ${spinPower}`)
             return {result: WOFGame.TURNRESULT.SPIN, spinData: spinData}
         }
         let specialCheck = this.handleSpecialSpace(this.Wheel.getWheelValue())
