@@ -66,7 +66,7 @@ export class Logger {
         let line = `** INFO ** ${await this._generateLine(msg, options)}`
         this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.INFO){
-            console.info(line)
+            console.info("\x1b[32m"+ line + "\x1b[0m")
         }
     }
     /**
@@ -78,7 +78,7 @@ export class Logger {
         let line = `** WARN ** ${await this._generateLine(msg, options)}`
         this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.WARN){
-            console.warn(line)
+            console.warn("\x1b[33m"+ line + "\x1b[0m")
         }
     }
     /**
@@ -90,7 +90,7 @@ export class Logger {
         let line = `** ERROR ** ${await this._generateLine(msg, options)}`
         this._write(line)
         if (Logger.LoggingLevel <= Logger.LEVELS.ERROR){
-            console.error(line)
+            console.error("\x1b[31m"+ line + "\x1b[0m")
         }
     }
 
