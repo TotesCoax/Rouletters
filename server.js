@@ -226,15 +226,23 @@ async function main(){
     
         socket.on(EventCode.nameChange, (data) => {
             ServerLogger.log(`Player name change request: ${data.name}`)
-            let player = WOF.PlayerHandler.getPlayer(data.id)
-            player.setName(data.name)
-            changeNotificationToBoard()
+            try {
+                let player = WOF.PlayerHandler.getPlayer(data.id)
+                player.setName(data.name)
+                changeNotificationToBoard()                
+            } catch (error) {
+                ServerLogger.error(`Name change update failed: ${error}`)
+            }
         })
         socket.on(EventCode.colorChange, (data) => {
             ServerLogger.log(`Player color change request: ${data.color}`)
-            let player = WOF.PlayerHandler.getPlayer(data.id)
-            player.setColor(data.color)
-            changeNotificationToBoard()
+            try {
+                let player = WOF.PlayerHandler.getPlayer(data.id)
+                player.setColor(data.color)
+                changeNotificationToBoard()                
+            } catch (error) {
+                ServerLogger.error(`Color change update failed: ${error}`)
+            }
         })
         // Game Actions
         
