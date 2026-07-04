@@ -103,7 +103,12 @@ export class PlayerHandler{
         return index
     }
     getPlayer(playerId){
-        return this.players[this.getPlayerIndex(playerId)]
+        try {
+            return this.players[this.getPlayerIndex(playerId)]            
+        } catch (error) {
+            this.TurnLogger.error(`No player found for ${playerId}.`)
+            this.TurnLogger.log(error)
+        }
     }
     getPlayersSortedByScore(){
         return this.players.toSorted((a, b) => a.totalScore - b.totalScore)
