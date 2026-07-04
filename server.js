@@ -108,7 +108,7 @@ async function main(){
             ServerLogger.info(`Next round requested ${data}`, {tags: ["gameAction", "socketIO"]})
             let result = WOF.nextPuzzle()
             if (result === WOFGame.TURNRESULT.NOTHING){
-                ServerLogger.error(`Next round requested with no puzzles in queue.`)
+                //Add actions you want if when puzzle requested when queue is empty.
             }
             changeNotificationToBoard()
             notificationToActivePlayer(result)
