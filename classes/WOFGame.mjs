@@ -91,6 +91,11 @@ export class WOFGame{
      */
     nextPuzzle(){
         if (this.PuzzleQueue.isEmpty){
+            this.GameLogger.error(`Next puzzle requested when puzzle queue is empty.`)
+            return WOFGame.TURNRESULT.NOTHING
+        }
+        if (this.PlayerHandler.players.length = 0){
+            this.GameLogger.error(`Next puzzle requested when there are no active players`)
             return WOFGame.TURNRESULT.NOTHING
         }
         let nextPuzz = this.PuzzleQueue.dequeue()
@@ -324,18 +329,17 @@ export class WOFGame{
      * @param {boolean} value 
      */
     setWaitingForGuess(value){
-        this.GameLogger.log(`Setting waiting for guess status: ${value}`)
         this.isWaitingForGuess = value
+        this.GameLogger.log(`Setting waiting for guess to ${value}. Waiting state: Spin ${this.isWaitingForSpin} , Guess ${this.isWaitingForGuess}`)
     }
     /**
      * 
      * @param {boolean} value 
      */
     setWaitingForSpin(value){
-        this.GameLogger.log(`Setting waiting for guess status.`)
         this.isWaitingForSpin = value
+        this.GameLogger.log(`Setting waiting for spin to ${value}. Waiting state: Spin ${this.isWaitingForSpin} , Guess ${this.isWaitingForGuess}`)
     }
-
 
     createTestEnvironment(){
         console.log('Creating Test players')
