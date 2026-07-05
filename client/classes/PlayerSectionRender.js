@@ -50,6 +50,8 @@ export class PlayerSectionRender {
         }
         if (data.isActive){
             playerContainerDiv.classList.add('active')
+            document.documentElement.style.setProperty('--active-player-border-color', 'white')
+            this.getBrightness(data.color) < 127 ? document.documentElement.style.setProperty('--active-player-border-color', 'white') : document.documentElement.style.setProperty('--active-player-border-color', 'black')
         }
         if(this.getBrightness(data.color) < 127){
             playerContainerDiv.style.color = "white"
