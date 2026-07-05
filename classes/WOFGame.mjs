@@ -318,7 +318,7 @@ export class WOFGame{
         }
         if(this.PlayerHandler.getPlayer(socketID)){
             this.PlayerHandler.getPlayer(socketID).setConnectedStatus(false)
-            this.GameLogger.log(`Player reconnect processed.`)
+            this.GameLogger.log(`Player disconnect processed.`)
         }
     }
 
