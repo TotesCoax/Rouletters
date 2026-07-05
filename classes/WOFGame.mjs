@@ -156,7 +156,7 @@ export class WOFGame{
         let letter = new Letter(guess),
             player = this.PlayerHandler.getPlayer(playerID)
 
-        // If it's not a number, it's gotta be a special space. This won't trigger until I have special spaces that are positive.
+        // If it's not a number, it's gotta be a special space. This won't trigger until I have special spaces that are positive, as the negative ones actiate upon landing.
         if (Number.isNaN(this.Wheel.getWheelValue())){
             return this.handleSpecialSpace(wheelValue)
         }
@@ -167,7 +167,7 @@ export class WOFGame{
                 this.GameLogger.log('Vowel purchase being processed')
                 return this.handleVowel(letter, player)
             } else {
-                this.GameLogger.warn(`Attempting to guess a vowel after a spin.`)
+                this.GameLogger.error(`Attempting to guess a vowel after a spin.`)
                 return WOFGame.TURNRESULT.GUESS
             }
         }
@@ -177,7 +177,7 @@ export class WOFGame{
                 this.GameLogger.log('Consonant found')
                 return this.handleConsonant(letter, player)
             } else {
-                this.GameLogger.warn(`Attempting to guess a consonant without spinning.`)
+                this.GameLogger.error(`Attempting to guess a consonant without spinning.`)
                 return WOFGame.TURNRESULT.GUESS
             }
 
