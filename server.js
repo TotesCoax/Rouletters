@@ -26,10 +26,12 @@ async function main(){
     GameServer.io.on(EventCode.connection, (socket) => {
         ServerLogger.log(`New connection ${socket.id}`, {tags: ["connect", "socketIO"]})
         socket.on(EventCode.disconnect, (reason) => {
-            ServerLogger.log(`${WOF.PlayerHandler.getPlayer(socket.id)} disconnected ${reason} ${socket.id}`, {tags: ["disconnect", "socketIO"]})
+            ServerLogger.log(`Board socket check: ${socket.id == WOF.getSocketBoardSocketID} Socket: ${socket.id}  File: ${WOF.getSocketBoardSocketID}`)
             if(socket.id !== WOF.getSocketBoardSocketID()){
-                ServerLogger.log(`Board socket check: ${socket.id == WOF.getSocketBoardSocketID} Socket: ${socket.id}  File: ${WOF.getSocketBoardSocketID}`)
                 WOF.handlePlayerDisconnect(socket.id)
+                ServerLogger.log(`${WOF.PlayerHandler.getPlayer(socket.id)} disconnected ${reason} ${socket.id}`, {tags: ["disconnect", "socketIO"]})
+            } else {
+                ServerLogger.log(`Board disconnected ${reason} ${socket.id}`, {tags: ["disconnect", "socketIO"]})
             }
             changeNotificationToBoard()
         })
@@ -38,6 +40,7 @@ async function main(){
         socket.on(EventCode.boardJoin, (id, callback) =>{
             // The Board gets assigned to a room for the board only.
             socket.join('board')
+            WOF.setSocketBoardSocketID(socket.id)
             ServerLogger.info(`Board joined board room`, {tags: ["join", "socketIO", "board", "client"]})
             // Confirm with the board that it has been assigned the room.
             callback('Room joined')
