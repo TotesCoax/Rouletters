@@ -239,12 +239,14 @@ export class WOFGame{
     handleVowel(letter, player){
         this.GameLogger.info(`Vowel processing: ${letter.character}`,{tags:["wof","gameAction","process"]})
         if (player.score <= 250){
+            this.GameLogger.error(`Trying to buy a vowel without enough points.`)
             return WOFGame.TURNRESULT.GUESS
         }
 
         let guessResult = this.Board.handleGuess(letter.character)
 
         if (guessResult <= 0){
+            this.GameLogger(`No ${letter.character} are in the puzzle.`)
             return WOFGame.TURNRESULT.INCORRECT
         }
         player.updateScore(-250)
