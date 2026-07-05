@@ -224,6 +224,7 @@ export class WOFGame{
             guessResult = this.Board.handleGuess(letter.character)
 
         if (guessResult <= 0){
+            this.GameLogger.info(`No ${letter.character} are in the puzzle.`)
             return WOFGame.TURNRESULT.INCORRECT
         }        
         player.updateScore(wheelValue * guessResult)
