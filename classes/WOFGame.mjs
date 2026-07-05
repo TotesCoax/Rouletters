@@ -253,7 +253,7 @@ export class WOFGame{
 
     /**
      * 
-     * @returns {{Board: Board, Wheel: Wheel, PlayerHandler: PlayerHandler}}
+     * @returns {{Board: Board, Wheel: Wheel, PlayerHandler: PlayerHandler, isWaitingForGuess: boolean, isWaitingForSpin: boolean}}
      */
     getGamestate(){
         this.GameLogger.log(`Gamestate request rec'd, sending.`,{tags:["wof",""]})
@@ -261,7 +261,9 @@ export class WOFGame{
         return {
             Board: this.Board,
             Wheel: this.Wheel,
-            PlayerHandler: this.PlayerHandler
+            PlayerHandler: this.PlayerHandler,
+            isWaitingForGuess: this.isWaitingForGuess,
+            isWaitingForSpin: this.isWaitingForSpin
         }
     }
     /**
