@@ -9,13 +9,10 @@
 
 #gameTitle {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 5rem;
     margin: 0;
 }
 
 #guessInputContainer {
-    display: flex;
-    align-items: center;
     gap: 30px;
 }
 

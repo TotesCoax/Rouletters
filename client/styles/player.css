@@ -24,19 +24,18 @@
 }
 
 .player-tile.active {
-    border: 5px var(--active-player-border-color) solid;
+    border: 1cqh var(--active-player-border-color) solid;
 }
 
 .player-tile p {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: clamp(1em, 25% + 1em, 2em);
     text-align: center;
     font-weight: bold;
     margin: 0;
 }
 
 p.player-total-score {
-    font-size: 1rem;
+    font-size: 1.5cqh;
 }
 
 .player-tile.disconnected {

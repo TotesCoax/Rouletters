@@ -80,7 +80,7 @@
 
 #usedLettersDisplay p {
     min-height: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 3cqh;
 }
 
 #gameDetailsContainer {
@@ -91,4 +91,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media screen and (orientation: portrait){
+    
 }

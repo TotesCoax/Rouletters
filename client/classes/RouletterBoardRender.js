@@ -96,7 +96,7 @@ export class RouletterBoardRender {
     renderGuessedLetters(arrayOfChars){
         this.clearChildren(this.guessedElement)
         let lettersEL = document.createElement('p'),
-            title = document.createElement('h6')
+            title = document.createElement('h3')
 
         title.innerText = "Guessed Letters:"
 

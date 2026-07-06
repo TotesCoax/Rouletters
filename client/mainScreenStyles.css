@@ -23,8 +23,45 @@
     "players players players players players";
 } */
 
-#wheelGrid {
+#gameContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    height: 100vh;
+    container: gameContainer / size;
+}
+
+h1 {
+    font-size: 10cqh;
+}
+
+h2 {
+    font-size: 8cqh;
+}
+
+h3 {
+    font-size: 5cqh;
+}
+
+label, input, button, select, p, span {
+    font-size: 3cqh;
+}
+
+/* This is to correct the picker size */
+select, ::picker {
+    appearance: base-select;
+}
+
+option {
+    font-size: 1cqh;
+}
+/* End picker size correction */
+
+
+.flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
 }

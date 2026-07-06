@@ -10,10 +10,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="wheelGrid">
+    <div id="gameContainer">
         <div id="topSection">
-            <h1 id="gameTitle">Rouletters</h1>
-            <div id="guessInputContainer">
+            <div class="flex align-items-center">
+                <h1 id="gameTitle">Rouletters</h1>
+            </div>
+            <div id="guessInputContainer" class="flex align-items-center">
                 <form id="guessForm">
                     <label for="guessInput">Enter guess:</label>
                     <input type="text" name="guessInput" id="guessInput" size="8" autocomplete="off">
@@ -21,15 +23,15 @@
                 </form>
                 <button type="button" id="solveButton">Solve</button>
             </div>
-                <div id="admin">
-                    <div id="messageCenter"></div>
-                    <div>
-                        <p>Game Admin</p>
+                <div id="admin" class="flex align-items-center">
+                    <div class="flex align-items-center">
+                        <span>Game Admin</span>
                         <button type="button" id="gamestateRefreshButton">Refresh</button>
                         <button type="button" id="nextRoundButton">Next Round</button>
                         <button popovertarget="fileUploadDialog">File</button>
                         <button popovertarget="manualModeDialog">Admin</button>
                     </div>
+                    <div id="messageCenter"></div>
 
                     <dialog id="fileUploadDialog" popover>
                         <h2>File Admin</h2>
@@ -55,7 +57,7 @@
                         </div>
                     </dialog>
                     <dialog id="manualModeDialog" popover>
-                        <h2>Manual controls</h2>
+                        <h3>Manual controls</h3>
                         <div id="manualMode" class="dialog-container">
                             <div>
                                 <label for="addPlayer">Add player:</label>
