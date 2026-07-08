@@ -317,7 +317,7 @@ export class WOFGame{
             this.GameLogger.log(`${this.PlayerHandler.getPlayer(socketID).name} disconnected`,{tags:["wof","player"]})            
         } catch (error) {
             console.log(error)
-            console.log(socketID, this.PlayerHandler.getPlayer(socketID) ,this.PlayerHandler.players)
+            console.log(socketID, this.boardSocketID)
         }
         if(this.PlayerHandler.getPlayer(socketID)){
             this.PlayerHandler.getPlayer(socketID).setConnectedStatus(false)
