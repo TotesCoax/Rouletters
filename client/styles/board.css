@@ -3,14 +3,12 @@
 /* Board stuff */
 #mainBoard {
     aspect-ratio: 2/1;
-    width: clamp(1000px, 65vw, 80%);
-    container-type: inline-size;
-    display: flex;
+    width: clamp(800px, 65vw, 80%);
+    container: board / size;
 }
 
 #mainBoard table {
     width: 100%;
-    border-spacing: .25rem;
     display: grid;
     grid: repeat(4, 1fr) / 1fr;
 }
@@ -29,6 +27,7 @@
     border-radius: 25%;
     padding: 0;
     align-content: center;
+    aspect-ratio: 1/1.5;
 }
 
 #mainBoard td:nth-child(even){

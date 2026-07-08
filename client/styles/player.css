@@ -8,11 +8,11 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    width: clamp(25%, 100vw, 100vw);
+    gap: .5cqw;
 }
 
 .player-tile {
-    height: clamp(100px, 100%, 15vh);
+    height: clamp(100px, 10cqh, 20vh);
     aspect-ratio: 2;
     border-radius: 1vw;
     background-color: lightblue;

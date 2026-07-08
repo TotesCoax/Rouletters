@@ -3,7 +3,6 @@
 /* Wheel Stuff */
 #wheelHolder {
     display: flex;
-    width: clamp(525px, 100%, 45vw);
     aspect-ratio: 1.3;
 }
 
