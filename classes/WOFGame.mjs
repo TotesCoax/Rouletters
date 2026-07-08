@@ -90,7 +90,7 @@ export class WOFGame{
      * @returns {WOFGame.turnResult} returns a set turn result value
      */
     nextPuzzle(){
-        if (this.PuzzleQueue.isEmpty){
+        if (this.PuzzleQueue.isEmpty()){
             this.GameLogger.error(`Next puzzle requested when puzzle queue is empty.`)
             return WOFGame.TURNRESULT.NOTHING
         }
