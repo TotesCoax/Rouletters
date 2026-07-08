@@ -22,11 +22,6 @@ socket.on('connect', () => {
         Board.renderGuessedLetters(res.Board.guessedLetters)
         Wheel.renderWheel(res.Wheel)
         Players.renderPlayerSection(res.PlayerHandler)
-        // renderBoard(res.Board.board)
-        // renderClue(res.Board.clue)
-        // renderGuessedLetters(res.Board.guessedLetters)
-        // renderWheel(res.Wheel)
-        // renderPlayerTiles(res.PlayerHandler.players, res.PlayerHandler.turnIndicator)
         renderPlayerList(res.PlayerHandler.players)
       })
     })
@@ -186,7 +181,7 @@ function spinWheel(dataFromServer){
 
         Reader.addEventListener('load', () => {
             const csv = Reader.result
-            console.table(csv)
+            //console.table(csv)
             socket.emit('gameFile', csv)
         })
     })
