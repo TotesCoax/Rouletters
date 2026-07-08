@@ -74,26 +74,30 @@ async function main(){
         }
     
         socket.on(EventCode.letterSubmission, (data) => {
-            ServerLogger.info(`${data, WOF.PlayerHandler.getCurrentPlayer().name}'s guess: ${data}`, {tags:["gameAction", "socketIO"]})
-            let result = WOF.playerGuess(data, WOF.PlayerHandler.getCurrentPlayer().gameID)
-            switch (result) {                   
-                case WOFGame.TURNRESULT.NOTHING:
-                    break;
-                case WOFGame.TURNRESULT.CORRECT:
-                    break;
-                case WOFGame.TURNRESULT.GUESS:
-                    break;
-                case WOFGame.TURNRESULT.SPIN:
-                    break;
-                case WOFGame.TURNRESULT.INCORRECT:
-                    break;
-                case WOFGame.TURNRESULT.LOSE:
-                    break;
-                case WOFGame.TURNRESULT.BANKRUPT:
-                    break;            
-                default:
-                    break;
-                }
+            if (WOF.PlayerHandler.players.length === 0){
+                ServerLogger.error(`Trying to guess when there are no players.`)
+            } else {
+                ServerLogger.info(`${data, WOF.PlayerHandler.getCurrentPlayer().name}'s guess: ${data}`, {tags:["gameAction", "socketIO"]})
+                let result = WOF.playerGuess(data, WOF.PlayerHandler.getCurrentPlayer().gameID)
+                switch (result) {                   
+                    case WOFGame.TURNRESULT.NOTHING:
+                        break;
+                    case WOFGame.TURNRESULT.CORRECT:
+                        break;
+                    case WOFGame.TURNRESULT.GUESS:
+                        break;
+                    case WOFGame.TURNRESULT.SPIN:
+                        break;
+                    case WOFGame.TURNRESULT.INCORRECT:
+                        break;
+                    case WOFGame.TURNRESULT.LOSE:
+                        break;
+                    case WOFGame.TURNRESULT.BANKRUPT:
+                        break;            
+                    default:
+                        break;
+                    }
+            }
                 changeNotificationToBoard()
                 notificationToActivePlayer(result)
         })
