@@ -1,4 +1,8 @@
 
+/**
+ * @import { WOFGame } from "../classes/WOFGame.mjs"
+ */
+
 import { EventCode } from "./classes/EventCode.js"
 import { RouletterBoardRender } from './classes/RouletterBoardRender.js'
 import { PlayerSectionRender } from './classes/PlayerSectionRender.js'
@@ -23,6 +27,7 @@ socket.on('connect', () => {
         Wheel.renderWheel(res.Wheel)
         Players.renderPlayerSection(res.PlayerHandler)
         renderPlayerList(res.PlayerHandler.players)
+        renderMessageCenter(res.isWaitingForSpin, res.isWaitingForGuess)
       })
     })
 })
@@ -158,7 +163,7 @@ function spinWheel(dataFromServer){
     const gamestateRefreshButton = document.getElementById('gamestateRefreshButton')
     gamestateRefreshButton.addEventListener('click', gameStateRequest)
     function gameStateRequest(){
-            socket.emit('gamestateRequest', socket.id, (res)=> {
+            socket.emit('gamestateRequest', socket.id, (/**@type {WOFGame} */res)=> {
             console.log(res)
             Board.renderBoard(res.Board.board)
             Board.renderClue(res.Board.clue)
@@ -166,6 +171,7 @@ function spinWheel(dataFromServer){
             Wheel.renderWheel(res.Wheel)
             Players.renderPlayerSection(res.PlayerHandler)
             renderPlayerList(res.PlayerHandler.players)
+            renderMessageCenter(res.isWaitingForSpin, res.isWaitingForGuess)
         })
     }
 
@@ -272,4 +278,28 @@ function spinWheel(dataFromServer){
         }
         let playerName = document.querySelector('#playerSelect').value
         socket.emit('setActive', playerName)
+    }
+
+    // Message Center
+
+    const messageCenter = document.getElementById('messageCenter')
+
+    function renderMessageCenter(spinBoolean, guessBoolean){
+        function createMsgEl(text){
+                let newSpan = document.createElement('span')
+                newSpan.classList.add('message-center-span')
+                newSpan.innerText = text
+                return newSpan
+        }
+        clearChildren(messageCenter)
+        messageCenter.append(createMsgEl("Available actions:"))
+        if (spinBoolean){
+            messageCenter.append(createMsgEl("SPIN"))
+        }
+        if (spinBoolean && guessBoolean){
+            messageCenter.append(createMsgEl("or"))
+        }
+        if (guessBoolean){
+            messageCenter.append(createMsgEl("GUESS"))
+        }
     }

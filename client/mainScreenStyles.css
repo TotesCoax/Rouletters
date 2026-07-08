@@ -65,3 +65,19 @@ option {
 .align-items-center {
     align-items: center;
 }
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.full-width {
+    width: 100%;
+}

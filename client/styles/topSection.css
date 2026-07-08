@@ -54,3 +54,7 @@ dialog::backdrop {
 .dialog-item {
     margin: 10px;
 }
+
+.message-center-span::after {
+    content: " ";
+}
