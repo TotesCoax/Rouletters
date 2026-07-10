@@ -94,7 +94,7 @@ export class WOFGame{
             this.GameLogger.error(`Next puzzle requested when puzzle queue is empty.`)
             return WOFGame.TURNRESULT.NOTHING
         }
-        if (this.PlayerHandler.players.length = 0){
+        if (this.PlayerHandler.players.length == 0){
             this.GameLogger.error(`Next puzzle requested when there are no active players`)
             return WOFGame.TURNRESULT.NOTHING
         }
