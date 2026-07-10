@@ -61,6 +61,7 @@ async function main(){
         // Direct to player message
         function notificationToActivePlayer(eventCode = WOFGame.TURNRESULT.NOTHING){
             if (WOF.PlayerHandler.players.length <= 0){
+                ServerLogger.warn(`Player array is empty.`)
                 return
             }
             ServerLogger.info(`Sending turn notice to ${WOF.PlayerHandler.getPlayer(WOF.getSocketIDForActivePlayer()).name}`)
