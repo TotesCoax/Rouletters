@@ -290,7 +290,7 @@ export class WOFGame{
             return {result: specialCheck, spinData: spinData}
         }
         this.GameLogger.info(`Wheel spun from ${initialValue} to ${this.Wheel.getWheelValue()}`,{tags:["wof","wheel","gameAction"]})
-        return {result: WOFGame.TURNRESULT.SPIN, spinData: spinData}
+        return {result: WOFGame.TURNRESULT.GUESS, spinData: spinData}
     }
 
     solvedPuzzle(){
