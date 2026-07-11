@@ -140,7 +140,7 @@ export class Board{
         this.BoardLogger.log(`Processing guess for: ${letter}`)
         let guessLetter = letter.toUpperCase()
         if(this.letterAlreadyGuessed(guessLetter)){
-            console.log("Letter already guessed.")
+            this.BoardLogger.log("Letter already guessed.")
             return -1
         }
         this.guessedLetters.push(guessLetter)

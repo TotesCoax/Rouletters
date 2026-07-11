@@ -139,7 +139,6 @@ export class WOFGame{
      */
     handleGuess(guess, playerID){
         this.GameLogger.info(`Processing guess ${guess} from ${this.PlayerHandler.getPlayer(playerID).name}. Waiting for guess: ${this.isWaitingForGuess}`,{tags:["wof","gameAction","process"]})
-        console.log(this)
 
         //Don't need guesses for a solved board.
         if(this.Board.isSolved){
@@ -290,6 +289,8 @@ export class WOFGame{
             return {result: specialCheck, spinData: spinData}
         }
         this.GameLogger.info(`Wheel spun from ${initialValue} to ${this.Wheel.getWheelValue()}`,{tags:["wof","wheel","gameAction"]})
+        this.isWaitingForSpin = false
+        this.isWaitingForGuess = true
         return {result: WOFGame.TURNRESULT.GUESS, spinData: spinData}
     }
 

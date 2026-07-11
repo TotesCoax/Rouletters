@@ -19,7 +19,7 @@ export class Player{
      * @param {number} number Amount to add to score, include "-" to reduce score
      */
     updateScore(number){
-        console.log(`${this.name} score updated ${this.score} to ${this.score + number}`)
+        // console.log(`${this.name} score updated ${this.score} to ${this.score + number}`)
         this.score += number
     }
     /**
