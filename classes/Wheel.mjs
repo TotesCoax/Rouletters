@@ -8,7 +8,7 @@ export class Wheel{
         this.currentDeg = 0
         this.minValue = 3
         this.maxValue = 9
-        this.speedPowerFactor = 20 //7.2 is roughly the factor to get a 50 power spin to go 360 degrees, if i did the math correct (360/50)
+        this.speedPowerFactor = 40 //7.2 is roughly the factor to get a 50 power spin to go 360 degrees, if i did the math correct (360/50)
         this.generateSections()
     }
     /**
