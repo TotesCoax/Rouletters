@@ -98,9 +98,9 @@ async function main(){
                     default:
                         break;
                     }
+                    changeNotificationToBoard()
+                    notificationToActivePlayer(result)
             }
-                changeNotificationToBoard()
-                notificationToActivePlayer(result)
         })
     
         socket.on('gameFile', (data) => {

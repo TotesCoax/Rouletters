@@ -224,9 +224,14 @@ export class WOFGame{
 
         if (guessResult <= 0){
             this.GameLogger.info(`No ${letter.character} are in the puzzle.`)
+            this.PlayerHandler.advanceTurn()
+            this.setWaitingForSpin(true)
+            this.setWaitingForGuess(false)
             return WOFGame.TURNRESULT.INCORRECT
         }        
         player.updateScore(wheelValue * guessResult)
+        this.setWaitingForSpin(true)
+        this.setWaitingForGuess(true)
         return WOFGame.TURNRESULT.CORRECT
     }
 
@@ -247,9 +252,14 @@ export class WOFGame{
 
         if (guessResult <= 0){
             this.GameLogger(`No ${letter.character} are in the puzzle.`)
+            this.PlayerHandler.advanceTurn()
+            this.setWaitingForSpin(true)
+            this.setWaitingForGuess(false)
             return WOFGame.TURNRESULT.INCORRECT
         }
         player.updateScore(-250)
+        this.setWaitingForSpin(true)
+        this.setWaitingForGuess(true)
         return WOFGame.TURNRESULT.CORRECT
     }
 
