@@ -226,7 +226,7 @@ export class WOFGame{
             this.GameLogger.info(`No ${letter.character} are in the puzzle.`)
             this.PlayerHandler.advanceTurn()
             this.setWaitingForSpin(true)
-            this.setWaitingForGuess(false)
+            this.setWaitingForGuess(true)
             return WOFGame.TURNRESULT.INCORRECT
         }        
         player.updateScore(wheelValue * guessResult)
@@ -254,7 +254,7 @@ export class WOFGame{
             this.GameLogger(`No ${letter.character} are in the puzzle.`)
             this.PlayerHandler.advanceTurn()
             this.setWaitingForSpin(true)
-            this.setWaitingForGuess(false)
+            this.setWaitingForGuess(true)
             return WOFGame.TURNRESULT.INCORRECT
         }
         player.updateScore(-250)
@@ -299,8 +299,8 @@ export class WOFGame{
             return {result: specialCheck, spinData: spinData}
         }
         this.GameLogger.info(`Wheel spun from ${initialValue} to ${this.Wheel.getWheelValue()}`,{tags:["wof","wheel","gameAction"]})
-        this.isWaitingForSpin = false
-        this.isWaitingForGuess = true
+        this.setWaitingForSpin(false)
+        this.setWaitingForGuess(true)
         return {result: WOFGame.TURNRESULT.GUESS, spinData: spinData}
     }
 
@@ -308,6 +308,7 @@ export class WOFGame{
         this.GameLogger.info(`Puzzle solve processing`,{tags:["wof","gameAction","puzzle","process"]})
         this.Board.revealAllLetters()
         this.PlayerHandler.getCurrentPlayer().saveRoundScoretoTotalScore()
+        this.setWaitingForSpin(false)
         this.setWaitingForGuess(false)
         this.Board.setIsSolved(true)
         return WOFGame.TURNRESULT.NOTHING
