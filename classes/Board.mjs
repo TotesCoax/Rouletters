@@ -25,7 +25,7 @@ export class Board{
      * Checks if phrase is too long to parse into the board.
      */
     tooManyChars(){
-        if(this.phrase > this.maxChar){
+        if(this.phrase.length > this.maxChar){
             this.BoardLogger.warn(`This phrase is too large to fit the board.`)
         }
     }
